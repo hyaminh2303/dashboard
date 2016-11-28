@@ -1,0 +1,23 @@
+//Basic
+.panel.box.box-solid.box-primary
+  .box-header
+    %h4.box-title
+      %a{href: '#basic'}
+        Basic
+  #basic.panel-collapse.collapse.in
+    .box-body
+      = f.input :ad_system, placeholder: 'Yoose'
+      = f.input :ad_title, placeholder: 'Romano preroll video'
+      = f.input :description, as: :text
+      = f.simple_fields_for :error_urls do |c|
+        = c.input :url, label: 'Error URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/errortracking/;campaign=oid270981777adid94672737;sz=1x1'
+      = f.simple_fields_for :impressions do |c|
+        = c.input :url, label: 'Impression URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/NZ_Entertainment_MobGeo/;campaign=oid270981777adid94672737;sz=1x1'
+      = f.input :creative_type, as: :radio_buttons, collection: Hash[Vast::CREATIVE_TYPES.each.map {|v| [v, v.camelize]}], checked: @vast.creative_type, value_method: :first, label_method: :last, input_html: {class: 'flat-red'}, :wrapper_html => { :class => 'form-inline' }
+      = f.input :has_companion_ad, as: :boolean, input_html: {class: 'flat-red'}, inline_label: true, label: false
+.row
+  .col-xs-7
+    = f.button :submit, 'Generate VAST',:class => 'btn btn-primary'
+    = link_to t('views.form.cancel'), vast_generator_path, :class => 'btn btn-default'
+  .col-xs-5
+    = f.input :file, as: :file, label: false, input_html: {class: 'btn-file-input btn-primary', title: 'Load from file ...'}

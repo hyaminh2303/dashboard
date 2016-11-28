@@ -1,0 +1,18 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@advertiser) do |f|
+      = f.error_notification
+
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @advertiser}
+        = f.input :name
+        = f.input :contact
+        = f.input :email, as: :email
+        = f.input :status do
+          = f.select :status, Advertiser::STATUSES, {:selected => @advertiser.status}, :class => 'form-control select2-static'
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), advertisers_path, :class => 'btn btn-default'

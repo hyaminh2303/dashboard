@@ -1,0 +1,27 @@
+- breadcrumb :daily_tracking, @daily_tracking
+- content_for :header do
+  = t('views.daily_trackings.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.daily_trackings.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_daily_tracking_path(@daily_tracking), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.daily_tracking.fields.campaign')
+          %dd= @daily_tracking.campaign
+          %dt= t('models.daily_tracking.fields.platform')
+          %dd= @daily_tracking.platform
+          %dt= t('models.daily_tracking.fields.date')
+          %dd= @daily_tracking.date
+          %dt= t('models.daily_tracking.fields.views')
+          %dd= @daily_tracking.views
+          %dt= t('models.daily_tracking.fields.clicks')
+          %dd= @daily_tracking.clicks
+          %dt= t('models.daily_tracking.fields.spend')
+          %dd= @daily_tracking.spend
+      / /.box-body
+    / /.box

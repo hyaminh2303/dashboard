@@ -1,0 +1,52 @@
+%form.step3-form{name: 'step3Form'}
+  %div{ng: { if: 'client_booking_campaign.banner_type == "ad_tag"' }}
+    .form-group
+      %label.control-label JS Tag
+      %textarea.form-control{rows: 12, ng: {model: 'client_booking_campaign.ad_tag'}}
+  %div{ng: { if: 'client_booking_campaign.banner_type != "ad_tag"' }}
+    .form-group
+      %label
+        %input{type: 'checkbox', ng: {model: 'client_booking_campaign.skip_upload_creatives'}}
+        Skip creative upload. I will upload creatives later
+    .form-group
+      %label
+        %input{type: 'checkbox', ng: {model: 'client_booking_campaign.need_yoose_help_design_creatives'}}
+        I need YOOSE help to design creatives for me
+    %div{ng: {if: '!skipOrNeedDesign()'}}
+      %alert{ng: {show: 'error'}, type: 'danger', close: 'closeAlert()'}
+        {{error.msg}}
+      %div.dropzone.dz-clickable{accept: 'image/*', :'allow-dir' => 'true', :'drag-over-class' => 'dragover', ngf: { drop: '', select: '', change: 'addBanners($files, $file, $event)', multiple: 'true', form: 'form' }, 'accept' => "image/*", ng: { model: 'selectedFiles', form: 'form' }}
+        .dz-default.dz-message{ng: {hide: 'hasBanners()'}}
+          %span
+            %span.bigger-150.bolder
+              %i.ace-icon.fa.fa-caret-right.red
+              Drop files
+            to upload
+            %span.smaller-80.grey (or click)
+            %br/
+            %i.upload-icon.ace-icon.fa.fa-cloud-upload.blue.fa-3x
+        %div{'ngf-no-file-drop' => ''} File Drag/Drop is not supported for this browser
+        .dz-preview.dz-image-preview{ng: {hide: 'b._destroy', repeat: 'b in client_booking_campaign.banners', click: 'stopClickFromContainer($event)'}}
+          .dz-details
+            .dz-filename
+              %span
+                {{b.name}}
+            %img{ng: {alt: '{{b.name}}', src: '{{b.image_url}}'}}
+          .dz-success-mark
+            %span
+          .dz-error-mark
+            %span
+          .dz-additional-data
+            .form-group
+              %label Name
+              %input.form-control.banner-name{type: 'text', name: 'name', ng: {model: 'b.name'}}
+            .form-group
+              %label Landing URL
+              %input.form-control.banner-landing-url{type: 'text', name: 'landing_url', ng: {model: 'b.landing_url'}}
+            .form-group
+              %label Client tracking URL
+              %input.form-control.banner-landing-url{type: 'text', name: 'client_tracking_url', ng: {model: 'b.client_tracking_url'}}
+          %a.dz-remove{ng: {click: 'removeBanner(b, $event)'}} Remove file
+    .form-group
+      %label.control-label Email
+      %input.form-control{type: 'email', ng: {model: 'client_booking_campaign.contact_email', init: "getContactEmail('#{current_user.email}')"}}

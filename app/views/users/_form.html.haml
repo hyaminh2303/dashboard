@@ -1,0 +1,16 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@user) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @user}
+        = f.input :name
+        = f.input :email, as: :email
+        - if @user.new_record?
+          = f.input :password, as: :password
+        = f.input :role_id, collection: Role.not_super_admin.map {|m| [m.name, m.id]}, :include_blank => false, input_html: {:class => 'select2-static'}
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), users_path, :class => 'btn btn-default'

@@ -1,0 +1,107 @@
+= simple_form_for(@campaign) do |f|
+  -#TODO: do angularjs + model(Campaign) refactoring later
+  .form-inputs{ng: {controller: 'EditController', init: "init(#{@campaign.unit_price}, '#{@campaign.unit_price_currency}', '#{@campaign.campaign_type}', #{@campaign.target_impression.nil? ? 'null' : @campaign.target_impression}, #{@campaign.target_click.nil? ? 'null' : @campaign.target_click}, #{@campaign.exchange_rate.nil? ? 'null' : @campaign.exchange_rate}, #{@campaign.discount.nil? ? 0 : @campaign.discount}, #{@campaign.bonus_impression.nil? ? 0 : @campaign.bonus_impression}, #{@campaign.development_fee.nil? ? 0 : @campaign.development_fee})"}}
+    = render :partial => '/shared/errors', locals: {model: @campaign}
+    .row
+      .col-md-6
+        // Primary
+        .panel.box.box-solid.box-primary
+          .box-header
+            %h4.box-title
+              %a{href: '#primary', data: {toggle: 'collapse'}}
+                Primary
+          #primary.panel-collapse.collapse.in
+            .box-body
+              = f.input :name
+              = f.input :agency_id, collection: Agency.enabled.map {|m| [m.name, m.id]}, :include_blank => false, input_html: {:class => 'select2-static'}
+              = f.input :advertiser_name
+              = f.input :category_id, collection: Category.grouped, as: :grouped_select, group_method: :last, label_method: :name, value_method: :id, :include_blank => false, input_html: {:class => 'select2-static'}
+              = f.input :country_code, as: :country, label: I18n.t('models.campaign.fields.country_code'), include_blank: false, input_html: {class: 'select2-static'}
+              .row.checkbox-group
+                .col-md-4
+                  = f.input :has_location_breakdown, as: :boolean, input_html: {class: 'flat-red'}, label: 'Has LBD'
+                .col-md-4
+                  = f.input :has_ads_group, as: :boolean, input_html: (CampaignAdsGroup.where(campaign_id: @campaign.id).count == 0 and DailyTracking.where(campaign_id: @campaign.id).count == 0) ? {class: 'flat-red'} : { class: 'flat-red', disabled: 'disabled'}, label: 'Has ad group'
+                .col-md-4
+                  = f.input :target_per_ad_group, as: :boolean, input_html: ( (CampaignAdsGroup.where(campaign_id: @campaign.id).count == 0 and DailyTracking.where(campaign_id: @campaign.id).count == 0) || @campaign.has_ads_group || @campaign.new_record?) ? {class: 'flat-red'} : { class: 'flat-red', disabled: 'disabled'}, label: 'Target per ad group'
+              -if !current_user.is_agency?
+                = f.input :campaign_manager
+
+        // Schedule
+        .panel.box.box-solid.box-success
+          .box-header
+            %h4.box-title
+              %a{href: '#schedule', data: {toggle: 'collapse'}}
+                Schedule
+          #schedule.panel-collapse.collapse.in
+            .box-body
+              = f.input :active_at, as: :date_picker
+              = f.input :expire_at, as: :date_picker
+              = f.input :remark, as: :text
+      .col-md-6
+        // Pricing
+        .panel.box.box-solid.box-info
+          .box-header
+            %h4.box-title
+              %a{href: '#pricing', data: {toggle: 'collapse'}}
+                Pricing
+          #pricing.panel-collapse.collapse.in
+            .box-body
+              = f.input :campaign_type, collection: enum_option_pairs(Campaign, :campaign_type), :include_blank => false, input_html: {:class => 'select2-static', 'ng-model' => 'campaign_type', 'ng-blur' => 'update()'}
+              = f.input :target_click, input_html: {'ng-model' => 'target_click', 'ng-blur' => 'update()'}
+              = f.input :target_impression, input_html: {'ng-model' => 'target_impression', 'ng-blur' => 'update()'}
+        // Budget
+        .panel.box.box-solid.box-info
+          .box-header
+            %h4.box-title
+              %a{href: '#budget', data: {toggle: 'collapse'}}
+                Budget
+          #budget.panel-collapse.collapse.in
+            .box-body
+              = f.input :unit_price, label: false do
+                .row
+                  = f.input :unit_price, input_html: {'ng-model' => 'price', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-6'}
+                  = f.input :unit_price_currency, collection: Currency.all.map{|m|[m.name, m.code]}, include_blank: false, input_html: {'ng-model' => 'currency', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-6'}
+
+                  = f.input :apply_price_creative, as: :boolean, wrapper_html: {class: 'col-md-12'},  input_html: f.object.apply_price_creative ? {class: 'flat-red'} : { class: 'flat-red'}
+
+                  = f.input :exchange_rate, label: t('models.campaign.fields.exchange_rate'), input_html: {'ng-model' => 'exchange_rate', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-6'}
+                  = f.input :exchange_url, input_html: { value: @settings.exchange_url}, wrapper_html: {class: 'col-md-6'}
+                  = f.input :discount, label: "#{t('models.campaign.fields.discount')} (%)", input_html: {'ng-model' => 'discount', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-6'}
+                  = f.input :bonus_impression, label: t('models.campaign.fields.bonus_impression'), input_html: {'ng-model' => 'bonus_impression', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-6'}
+                  = f.input :development_fee, label: t('models.campaign.fields.development_fee'), input_html: {'ng-model' => 'development_fee', 'ng-blur' => 'update()'}, wrapper_html: {class: 'col-md-12'}
+              .row
+                .col-md-4
+                  .form-group
+                    %label.control-label
+                      = t('views.campaigns.edit.unit_price_in_usd')
+                      ( XR =
+                      %span.text-teal{ng: {bind: 'market_exchange_rate'}}
+                      )
+                    .controls
+                      %span.text-aqua{ng: {bind: 'usd'}}
+                .col-md-4
+                  .form-group
+                    %label.control-label
+                      = t('views.campaigns.edit.budget')
+                    .controls
+                      %span.text-green{ng: {bind: 'budget'}}
+                .col-md-4
+                  .form-group
+                    %label.control-label
+                      = t('views.campaigns.edit.media_budget')
+                    .controls
+                      %span.text-green{ng: {bind: 'actual_budget'}}
+        // Other
+        .panel.box.box-solid.box-info
+          .box-header
+            %h4.box-title
+              %a{href: '#others', data: {toggle: 'collapse'}}
+                Others
+          #others.panel-collapse.collapse.in
+            .box-body
+              = f.input :sales_agency_commission
+              = f.input :campaign_key
+
+    = f.button :submit, :class => 'btn btn-primary'
+    = link_to t('views.form.cancel'), campaigns_path, :class => 'btn btn-default'

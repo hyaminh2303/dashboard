@@ -1,0 +1,107 @@
+body{
+  font-family: 'Verdana'
+}
+.text-io{
+  text-align: right;
+  font-size: 20pt;
+}
+.pdf-contain{
+  font-size: 10pt !important;
+  margin-top: 0px;
+}
+.text-size{
+  font-size: 7pt !important;
+}
+.table-io>tbody>tr>td{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.table-io{
+  margin-top: 0px !important;
+  margin-left: -15px !important;
+}
+.subtit{
+  color: #CC1F21 !important;
+  font-weight: bold !important;
+  margin-bottom: 0px !important;
+  clear: both;
+}
+.title{
+  font-weight: bold !important;
+  color: #CC1F21 !important;
+  margin-bottom: 0px;
+}
+.booking-info{
+  margin: auto !important;
+  width:100% !important;
+  text-align: center !important;
+  tr>th{
+    font-size: 6pt !important;
+    text-align: center !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: #f2efef !important;
+    border: 1px solid #f2efef !important;
+  }
+}
+.text-right{
+  padding-right: 2px !important;
+}
+.logo-io{
+  padding-top: 10px;
+  width: 200px;
+}
+.slogan-io{
+  font-weight: bold !important;
+  color: #CC1F21 !important;
+}
+.address-io{
+  background-color: #f2efef !important;
+  padding-left: 4px;
+  margin-top: 5px;
+}
+.terms-conditions{
+  margin: 10px 0px 10px 0px;
+  padding: 2px 2px 2px 4px;
+  border: 1px solid #DDDDDD;
+  display:block;
+  a{
+    color: #428BCA !important;
+  }
+}
+.addition-info{
+  background-color: #f2efef !important;
+  margin: 0px 0px 5px 0px;
+  padding: 2px 2px 2px 2px;
+}
+.page-break {
+  display:block;
+  clear:both;
+  page-break-after:always;
+}
+.table-insertion{
+  margin-bottom: 10px;
+}
+.author-io{
+  display: block;
+  margin-bottom: 0px;
+  padding: 5px 15px;
+  table{
+    width: 100% !important;
+    td{
+      padding: 2px 5px;
+      border: 1px solid #DDDDDD !important;
+    }
+  }
+}
+
+.page-break { display:block; clear:both; page-break-after:always; }
+.amendment{
+  margin: 10px 0px 10px 0px;
+  padding: 2px 2px 2px 4px;
+  border: 1px solid #DDDDDD;
+  display:block;
+  a{
+    color: #428BCA !important;
+  }
+}

@@ -1,0 +1,17 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@publisher) do |f|
+      = f.error_notification
+
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @publisher}
+        = f.input :name
+        = f.input :email, as: :email
+        = f.input :status do
+          = f.select :status, Publisher::STATUSES, {:selected => @publisher.status}, :class => 'form-control select2-static'
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), publishers_path, :class => 'btn btn-default'

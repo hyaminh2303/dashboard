@@ -1,0 +1,51 @@
+
+= simple_form_for(@agency) do |f|
+  .form-inputs
+    = render :partial => '/shared/errors', locals: {model: @agency}
+    .row
+      .col-md-6
+        .panel.box.box-solid.box-primary
+          .box-header
+            %h4.box-title
+              %a{href: '#primary', data: {toggle: 'collapse'}}
+                Agency Infomation
+          #primary.panel-collapse.collapse.in
+            .box-body
+              = f.input :name
+              = f.input :email
+              = f.input :country_code, as: :country, label: I18n.t('models.agency.fields.country_code'), input_html: {class: 'select2-static'}
+              = f.input :channel, collection: Agency.all_channels, as: :select, label: 'Channel', include_blank: '<Not specify>', selected: @agency.channel || params[:selected], input_html: {:class => 'select2-static'}
+              - if @agency.is_client? or (@agency.is_agency? and @agency.clients.count == 0)
+                = f.input :parent_id, collection: Agency.all_agencies, as: :select, label: I18n.t('models.agency.fields.agency'), prompt: I18n.t('models.agency.actions.select_as_agency'), include_blank: '<Not specify>', selected: @agency.parent_id || params[:selected], label_method: lambda { |agency| "#{agency.name} <#{agency.email}>" }, input_html: {:class => 'select2-static'}, :label => 'Parent Agency'
+              - else
+                = f.input :parent_id, as: :select, label: I18n.t('models.agency.fields.agency'), input_html: {:class => 'select2-static', disabled: 'disabled'}, :label => 'Parent Agency'
+        .panel.box.box-solid.box-success
+          .box-header
+            %h4.box-title
+              %a{href: '#contact', data: {toggle: 'collapse'}}
+                Contact Infomation
+          #contact.panel-collapse.collapse.in
+            .box-body
+              = f.input :contact_name, :label => 'Name'
+              = f.input :contact_phone, :label => 'Phone'
+              = f.input :contact_email, :label => 'Email'
+              = f.input :contact_address, :label => 'Address'
+              = f.input :use_contact_info, as: :boolean, input_html: {class: 'flat-red'}, :label => 'Use contact information as the same billing information.'
+
+      .col-md-6
+        .panel.box.box-solid.box-info
+          .box-header
+            %h4.box-title
+              %a{href: '#budget', data: {toggle: 'collapse'}}
+                Billing Infomation
+          #budget.panel-collapse.collapse.in
+            .box-body
+              = f.input :billing_name, :label => 'Name'
+              = f.input :billing_phone, :label => 'Phone'
+              = f.input :billing_email, :label => 'Email'
+              = f.input :billing_address, :label => 'Address'
+              = f.input :currency_id, collection: Currency.all, as: :select, label: 'Currency', selected: @agency.currency_id || params[:selected], input_html: {:class => 'select2-static'}
+
+    = f.button :submit, :class => 'btn btn-primary'
+    = link_to t('views.form.cancel'), campaigns_path, :class => 'btn btn-default'
+

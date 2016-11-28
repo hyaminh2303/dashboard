@@ -1,0 +1,29 @@
+- breadcrumb :location_list, @location_list
+- content_for :header do
+  = t('views.location_lists.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title= t('views.location_lists.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_location_list_path(@location_list), :class => 'btn btn-info btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.location_list.fields.name')
+          %dd= @location_list.name
+          %dt= t('models.location_list.fields.list_type')
+          %dd= @location_list.list_type
+          %dt= t('models.location_list.fields.status')
+          - if @location_list.status==LocationList::STATUS_PUBLISHED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-checkmark-circled').html_safe, "",:class => 'text-green', :title => t('statuses.published')
+          - elsif @location_list.status==LocationList::STATUS_EXPIRED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-close-circled').html_safe, "",:class => 'text-red', :title => t('statuses.expired')
+          - else
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-help-circled').html_safe, "",:class => 'text-blue', :title => t('statuses.pending')
+      / /.box-body
+    / /.box

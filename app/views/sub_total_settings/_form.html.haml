@@ -1,0 +1,19 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@sub_total_setting) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @sub_total_setting}
+        = f.input :name
+        .row
+          .col-md-6
+            %label
+              %abbr{title:"required"}*
+              Sub Total Type 
+            = f.select :sub_total_setting_type, SubTotalSetting.sub_total_setting_types.collect { |p| [ p[0].capitalize, p[0] ] }, {}, class: 'select2-static select-sub-total-setting-type'
+          .col-md-6
+            = f.input :value, label: 'Value'
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), sub_total_settings_path, :class => 'btn btn-default'

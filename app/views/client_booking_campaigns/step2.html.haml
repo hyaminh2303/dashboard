@@ -1,0 +1,107 @@
+%form.step2-form{name: 'step2Form'}
+  .row
+    .col-md-6
+      .panel.box.box-solid.box-primary.group-all-input
+        .box-header
+          %h4.box-title
+            %a{href: '#primary', data: {toggle: 'collapse'}}
+              Campaign Information
+        #primary.panel-collapse.collapse.in
+          .box-body
+            .row
+              .col-md-12.form-group
+                %label.control-label Campaign Name
+                %input.form-control{type: 'text', ng: { model: 'client_booking_campaign.campaign_name' }, placeholder: 'Enter campaign name'}
+            .row
+              .col-md-12.form-group
+                %label.control-label Advertiser Name
+                %input.form-control{type: 'text', ng: { model: 'client_booking_campaign.advertiser_name' }, placeholder: 'Enter advertiser name'}
+            .row
+              .col-md-12.form-group
+                %label.control-label Campaign category
+                = select_tag '', grouped_options_for_select(Category.grouped.map{|a| [a.first, a.second.map{|b| [b.name, b.id]}]}), {class: 'form-control', 'ng-model' => 'client_booking_campaign.campaign_category'}
+              .col-md-12.form-group
+                %label.control-label Frequency cap
+                %input.form-control{type: 'number', ng: { model: 'client_booking_campaign.frequency_cap' }, placeholder: 'Enter frequency cap'}
+
+      // Schedule
+      .panel.box.box-solid.box-info.group-all-input
+        .box-header
+          %h4.box-title
+            %a{href: '#schedule', data: {toggle: 'collapse'}}
+              Schedule
+        #schedule.panel-collapse.collapse.in
+          .box-body
+            .row
+              .col-md-12.form-group
+                %label.control-label Start Date
+                .input-group
+                  %input.form-control.start-time{'close-text' => 'Close', 'is-open' => 'isStartOpen',  ng: {model: 'client_booking_campaign.start_date', required: true }, :type => 'text', 'uib-datepicker-popup' => 'dd MMM yy', 'show-button-bar' => 'false', readonly: true, placeholder: 'Select start date', 'datepicker-options' => "dateOptions"}
+                    %span.input-group-btn
+                      %button.btn.btn-primary{'ng-click' => 'isStartOpen=true', :type => 'button'}
+                        %i.fa.fa-calendar
+              .col-md-12.form-group
+                %label.control-label End Date
+                .input-group
+                  %input.form-control.start-time{'close-text' => 'Close', 'is-open' => 'isEndOpen',  ng: {model: 'client_booking_campaign.end_date', required: true }, :type => 'text', 'uib-datepicker-popup' => 'dd MMM yy', 'show-button-bar' => 'false', readonly: true, placeholder: 'Select end date', 'datepicker-options' => "dateOptions"}
+                    %span.input-group-btn
+                      %button.btn.btn-primary{'ng-click' => 'isEndOpen=true', :type => 'button'}
+                        %i.fa.fa-calendar
+              .col-md-12.form-group
+                %label.control-label Timezone
+                = time_zone_select( "", "", ActiveSupport::TimeZone.all.sort, {model: ActiveSupport::TimeZone}, {class: 'form-control', 'ng-model' => 'client_booking_campaign.timezone'} )
+    .col-md-6
+      .panel.box.box-solid.box-info.group-all-input
+        .box-header
+          %h4.box-title
+            %a{href: '#primary', data: {toggle: 'collapse'}}
+              Price and Buget
+        #primary.panel-collapse.collapse.in
+          .box-body
+            .row
+              .col-md-12.form-group
+                %label.control-label Campaign type
+                %select.form-control{'ng-options' => "campaign_type.key as campaign_type.label for campaign_type in campaign_types", 'ng-model'=>"client_booking_campaign.campaign_type", 'ng-change' => 'calculateBudget()'}
+            .row
+              .col-md-12.form-group
+                %label.control-label {{getTargetLabel()}}
+                %input.form-control{type: 'number', ng: { model: 'client_booking_campaign.target' , change: 'calculateBudget()' }, placeholder: 'Enter target'}
+                %div.text-error{ng: {show: '!isValidTarget()'}}
+                  Target should be less than total impression assessment
+              .col-md-12.form-group
+                %label.control-label Unit Price
+                %input.form-control{type: 'number', ng: { model: 'client_booking_campaign.unit_price', change: 'calculateBudget()' }, placeholder: 'Enter unit price'}
+              .col-md-12.form-group
+                %label.control-label Budget
+                %input.form-control{type: 'number', ng: { model: 'client_booking_campaign.budget' }, readonly: true, placeholder: 'Enter campaign type, target and unit price to calculate budget'}
+                %div.text-error{ng: {show: '!isValidBudget()'}}
+                  Budget should be greater than 1000
+
+      .panel.box.box-solid.box-success.group-all-input
+        .box-header
+          %h4.box-title
+            %a{href: '#schedule', data: {toggle: 'collapse'}}
+              Target
+        #schedule.panel-collapse.collapse.in
+          .box-body
+            .row
+              .col-md-6.form-group
+                %label.control-label Time schedule
+                %input.form-control{type: 'text', ng: { model: 'client_booking_campaign.time_schedule' }, placeholder: 'Enter Time Schedule'}
+              .col-md-6.form-group
+                %label.control-label Carrier
+                %input.form-control{type: 'text', ng: { model: 'client_booking_campaign.carrier' }, placeholder: 'Enter Carrier'}
+            .row
+              .col-md-6.form-group
+                %label.control-label OS
+                %select2.form-control{ng: {model: "client_booking_campaign.os", required: 'true'}, "s2-options" => "os.key as os.label for os in operating_systems", placeholder: 'Select OS'}
+              .col-md-6.form-group
+                %label.control-label Wifi or cellular
+                %select2.form-control{ng: {model: "client_booking_campaign.wifi_or_cellular", required: 'true'}, "s2-options" => "wifi_or_cellular.key as wifi_or_cellular.label for wifi_or_cellular in wifi_or_cellulars", placeholder: 'Select Wifi or cellular'}
+            .row
+              .col-md-12.form-group
+                %label.control-label App catgory
+                %select2.form-control{ng: {model: "client_booking_campaign.app_category", required: 'true'}, "s2-options" => "category.code as category.name for category in categories", placeholder: 'Enter app category', multiple: ''}
+              .col-md-12.form-group
+                %label.control-label Additional
+                %textarea.form-control{ng: { model: 'client_booking_campaign.additional' }, placeholder: 'Enter additional'}

@@ -1,0 +1,64 @@
+!!!
+%html{ng: {app:'client_campaigns.app'}}
+  %head
+    %title
+      = @title ? "#{@title} - " : ''
+      = t('app_name')
+    = favicon_link_tag 'YOOSEfavicon.ico'
+    = stylesheet_link_tag 'application', controller_name, media: 'all'
+    = javascript_include_tag 'application', "app/#{controller_name}"
+    = csrf_meta_tags
+  %body.skin-yoose
+    %header.header
+      = link_to '', root_path, :class => 'logo'
+      %nav.navbar.navbar-static-top{:role => "navigation"}
+        %a.navbar-btn.sidebar-toggle{"data-toggle" => "offcanvas", :href => "#", :role => "button"}
+          %span.sr-only Toggle navigation
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        .navbar-right
+          %ul.nav.navbar-nav
+            %li.dropdown.user.user-menu
+              %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+                %i.glyphicon.glyphicon-user
+                %span
+                  = current_user.name
+                  %i.caret
+              %ul.dropdown-menu
+                %li.user-header
+                  = image_tag 'avatar3.png', :class => 'img-circle', :alt => 'User Image'
+                  %p
+                    = current_user.name
+                    %small
+                      Member since #{current_user.created_at.to_date}
+                %li.user-footer
+                  .pull-left
+                    - if session[:admin_id]
+                      = link_to t('devise.registrations.back_to_admin'), become_admin_path, :class => 'btn btn-default btn-flat', data: { method: :post }
+                    - else
+                      = link_to t('devise.registrations.change_password'), edit_user_registration_path, :class => 'btn btn-default btn-flat'
+
+                  .pull-right
+                    = link_to t('devise.sessions.sign_out'), destroy_user_session_path, :method => 'delete', :class => 'btn btn-default btn-flat'
+    .wrapper.row-offcanvas.row-offcanvas-left
+      %aside{class: "left-side sidebar-offcanvas"}
+        %section.sidebar
+          = render_navigation :expand_all => true
+      %aside{class: "right-side"}
+        %section.content-header
+          %h1
+            = yield :header
+          = breadcrumbs :style => :bootstrap
+        %section.content
+          - if notice
+            .alert.alert-success.alert-dismissable
+              %i.fa.fa-check
+              %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+              = notice
+          - if alert
+            .alert.alert-danger.alert-dismissable
+              %i.fa.fa-ban
+              %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+              = alert
+          = yield

@@ -1,0 +1,42 @@
+- breadcrumb :location_trackings
+- content_for :header do
+  = link_to @campaign.name, campaign_path(@campaign)
+
+-#.row
+-#  .col.col-lg-3
+-#    .box.box-info{ng: { controller: 'DatepickerChangeController', init: "init('#location_tracking_date', #{@date.to_time.to_i * 1000}, '#{Date::DATE_FORMATS[:js_default]}', '#{campaign_location_trackings_path}')" }}
+-#      = simple_form_for :location_tracking, url: new_campaign_location_tracking_path do |f|
+-#        .box-body.form-inputs
+-#          = f.input :date, as: :string, input_html: { value: @date.strftime(Date::DATE_FORMATS[:rails_datepicker_default]), data: { provide: 'datepicker'}, 'ng-model' => 'date', 'ng-blur' => 'onBlur($event)', 'ng-change' => "onChangeDate()", 'datepicker-directive' => '', 'datepicker-format' => Date::DATE_FORMATS[:js_datepicker_default], 'datepicker-start-time' => @campaign.active_at.to_time.to_i * 1000, 'datepicker-end-time' => @campaign.expire_at.to_time.to_i * 1000}
+-#
+-#          = link_to(icon_tag(:import) + content_tag(:span, 'Import').html_safe,
+-#                    "#{import_campaign_location_trackings_path}?date=#{date_to_iso_string(@date)}",
+-#                    data: @number_of_trackings > 0 ? { confirm: I18n.t('models.location_tracking.validate.already_imported', date: @date)} : '',
+-#                    class: 'btn btn-success')
+-#
+-#          = link_to content_tag(:span, 'Reset').html_safe,
+-#                    campaign_location_trackings_path,
+-#                    class: 'btn btn-default'
+
+/ form start
+.row
+  .col.col-md-6
+    .box.box-info{ng: { controller: 'ImportController', init: "init('#{@number_of_trackings > 0 ? I18n.t('models.location_tracking.validate.already_imported') : '' }')"}}
+      = simple_form_for :location_trackings, url: import_campaign_location_trackings_path(date: date_to_iso_string(@date)), enctype: 'multipart/form-data' do |f|
+        .box-body.form-inputs
+
+          - unless @error_messages.nil?
+            - if @error_messages.any?
+              .alert.alert-danger.alert-dismissable
+                %i.fa.fa-ban
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+                %ul
+                  - @error_messages.each do |msg|
+                    %li= msg
+
+          .form-group
+            = f.label :file
+            = f.file_field :file
+          = f.button :submit, :value => t('views.form.import'), :class => 'btn btn-primary', 'ng-click' => 'onImportClick($event)'
+
+= datagrid_table @grid, :new_path => new_campaign_location_tracking_path(date: date_to_iso_string(@date)), :html => {:class => 'table table-bordered table-hover'}, partials: 'location_trackings/datagrid'

@@ -1,0 +1,13 @@
+en:
+  views:
+    sub_total_settings:
+      index:
+        title: "Sub Total Setting"
+        table_header: "Listing Sub Total Setting"
+      show:
+        title: "Sub Total Setting Details"
+        info: "Information"
+      edit:
+        title: "Edit Sub Total Setting"
+      new:
+        title: "New Sub Total Setting"

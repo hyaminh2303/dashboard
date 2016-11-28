@@ -1,0 +1,28 @@
+//Overlay Ad
+.panel.box.box-solid.box-primary
+  .box-header
+    %h4.box-title
+      %a{href: '#overlay-ad', data: {toggle: 'collapse', parent: '#accordion'}}
+        Overlay ad
+  #overlay-ad.option-params.panel-collapse.collapse{ class: "#{'in' if @vast.has_non_linear_ad? }"}
+    .box-body
+      = f.simple_fields_for :non_linear_ads do |c|
+        = c.simple_fields_for :non_linear_resources do |c2|
+          .row
+            .col-md-6
+              = c2.input :width, as: :integer, placeholder: '800'
+            .col-md-6
+              = c2.input :height, as: :integer, placeholder: '600'
+          = c2.simple_fields_for :ad_resources do |c3|
+            = c3.input :resource_type, collection: VastGenerator::AdResource::RESOURCE_TYPES, as: :grouped_select,group_method: :last, include_blank: 'Choose resource type', input_html: {class: 'select2-static'}
+            .row
+              .col-xs-8
+                = c3.input :url, label: 'Resource URL', placeholder: 'http://im-dev.s3.amazonaws.com/image_server/templates/campaign_16/video.mp4'
+              .col-xs-4
+                = c3.input :media, as: :file, label: 'Upload file', input_html: {class: 'btn-file-input'}
+          = c2.input :click_through, label: 'Click Through URL', placeholder: 'http://im.l.dev.s3-website-eu-west-1.amazonaws.com/16/index.html'
+          = c2.simple_fields_for :click_trackings do |c3|
+            = c3.input :url, label: 'Click Tracking URL', placeholder: 'http://pubads.g.doubleclick.net/gampad/clk?id=94677177&iu=/3595/NZ_Entertainment_MobGeo'
+        = c.simple_fields_for :tracking_events do |c2|
+          = c2.input :event, collection: VastGenerator::TrackingEvent::EVENTS, include_blank: 'Choose event type', input_html: {class: 'select2-static'}
+          = c2.input :url, label: 'Tracking event URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/trackingevents/;campaign=oid270981777adid94672737;sz=1x1'

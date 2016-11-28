@@ -1,0 +1,31 @@
+.box.box-info
+  .box-header
+    = options[:icon]
+    %h3.box-title
+      = options[:header] || t('datagrid.header.default')
+    .box-tools.pull-right
+      = collapse_expand_button('btn-info')
+  .box-body
+    .row
+      .col-lg-6.col-xs-6
+        - if options[:new_path]
+          = link_to icon_tag(:create) + content_tag(:span, I18n.t('datagrid.table.actions.add')).html_safe,
+                    options[:new_path],
+                    :class => 'btn btn-primary btn-sm text-white', :title => I18n.t('datagrid.table.actions.add')
+          - if options[:more_links]
+            - options[:more_links].each do |link|
+              = link
+      .col-lg-6.col-xs-6.text-right
+    = content_tag :table, options[:html] do
+      %thead
+        = datagrid_header(grid, options)
+      %tbody
+        - if assets.any?
+          = datagrid_rows(grid, assets, options)
+        - else
+          %tr
+            %td.noresults{:colspan => "100%"}= I18n.t('datagrid.no_results').html_safe
+      %tfoot
+        = datagrid_header(grid, options)
+  .box-footer
+    = render :partial => 'locations/datagrid/pagination', :locals => {:grid => grid, :assets => assets, :options => options}

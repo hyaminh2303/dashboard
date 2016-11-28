@@ -1,0 +1,13 @@
+.dropzone {
+  min-height: 480px;
+
+  .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details {
+    width: 200px;
+    height: 120px;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}

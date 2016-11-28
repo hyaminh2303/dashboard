@@ -1,0 +1,86 @@
+- breadcrumb :platforms
+.box-dashboard.box-loading{ng: {controller: 'PlatformsController'}}
+  .box.box-info
+    .box-header
+      %h3.box-title Platforms
+    .box-body
+      .row
+        .col-lg-2
+          %select2{"ng-model" => "period", "s2-options" => "p.value as p.name for p in periods", style: 'width: 100%'}}
+        .col-lg-2
+          %input{"class" => "period", "ng-disabled"=>"period!='custom'", "date-change" => "onDateChanged",  "auto-close" => "true", "date-time" => "", :format => "DD MMM YY", "max-view" => "date", "min-view" => "date", "ng-model" => "dates.startDate", :view => "date"}
+        .col-lg-2
+          %input{"class" => "period", "ng-disabled"=>"period!='custom'", "auto-close" => "true","date-change" => "onDateChanged", "date-time" => "", :format => "DD MMM YY", "max-view" => "date", "min-view" => "date", "ng-model" => "dates.endDate", :view => "date"}
+      .row
+        .col-md-12
+        #box-chart.col-lg-12
+          .alert.alert-warning{ng: {show: 'isShowAlert'}}= I18n.t('views.statss.message.no_data')
+          %highchart#statsChart{:config => "chartConfig", style: 'height: 300px'}
+
+      .row.stats-buttons
+        .col-lg-12
+          .btn-group.btn-group-justified{data: {toggle: :buttons}}
+            .btn.btn-default.btn_stat_views{ ng: {class: "{active: chartTab == 'views'}", click: "loadChart('views')" }}
+              %input#views_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+              %i.ion.ion-stats-bars.pull-left
+              .stats-content.pull-left
+                Views
+                %p{ng: { bind: 'chartStats.views|number' }}
+            .btn.btn-default.btn_stat_clicks{ ng: {class: "{active: chartTab == 'clicks'}", click: "loadChart('clicks')" }}
+              %input#clicks_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+              %i.ion.ion-stats-bars.pull-left
+              .stats-content.pull-left
+                Clicks
+                %p{ng: { bind: 'chartStats.clicks|number' }}
+            .btn.btn-default.btn_stat_budget_spent{ ng: {class: "{active: chartTab == 'budget_spent'}", click: "loadChart('budget_spent')" }}
+              %input#budget_spent_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+              %i.ion.ion-stats-bars.pull-left
+              .stats-content.pull-left
+                Actual Spent
+                %p
+                  $
+                  %span{ng: { bind: 'chartStats.budget_spent|number:2' }}
+      %a{href: '/platforms/new', class: 'btn btn-primary btn-sm text-white'}
+        %i{class: 'glyphicon glyphicon-plus'}
+        Add Platform
+      %table.table.table-platform.table-bordered.table-hover{"st-table" => "rows", "st-pipe" => "refresh"}
+        %thead
+          %tr
+            %th{"st-sort" => "name"} Name
+            %th{"st-sort" => "views"} Views
+            %th{"st-sort" => "views"} Clicks
+            %th{"st-sort" => "ctr"} CTR
+            %th{"st-sort" => "budget_spent"} Actual Spent
+            %th.actions
+        %tbody
+          %tr{ng: {repeat: 'row in rows', click: 'onPlatformSelected()'}, "st-select-row" => "row"}
+            %td {{row.name}}
+            %td {{row.views || 0 | number}}
+            %td {{row.clicks|| 0 | number}}
+            %td {{row.ctr || 0 | number:2}}%
+            %td ${{row.budget_spent || 0 | number:2}}
+            %td
+              .btn-group.pull-right{ng: {show: "row.id"}}
+                %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+                  %span.glyphicon.glyphicon-cog
+                  %span.sr-only Toggle Dropdown
+                %ul.dropdown-menu{:role => "menu"}
+                  %li
+                    %a{:href => "/platforms/{{row.id}}", :title => "Detail"}
+                      %i.glyphicon.glyphicon-list-alt>
+                      Detail
+                  %li
+                    %a{:href => "/platforms/{{row.id}}/edit", :title => "Edit"}
+                      %i.glyphicon.glyphicon-edit>
+                      Edit
+                  %li{ng: { if: "!row.has_campaigns" }}
+                    %a{:href => "javascript:void(0)", :title => "Delete", ng: { click: "remove(row)" }}
+                      %i.glyphicon.glyphicon-trash>
+                      Delete
+          %tfoot
+            %tr
+              %td.text-center{:colspan => "6"}
+                %div{"st-items-by-page" => "10", "st-pagination" => ""}
+
+  .overlay.loading.hidden_only
+  .loading-img.loading.hidden_onl

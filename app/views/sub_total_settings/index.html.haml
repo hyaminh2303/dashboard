@@ -1,0 +1,7 @@
+- breadcrumb :sub_total_settings
+- content_for :header do
+  = t('views.sub_total_settings.index.table_header')
+
+= datagrid_form_for @grid, :as => :sub_total_settings_grid, :url => sub_total_settings_path
+
+= datagrid_table @grid, :new_path => new_sub_total_setting_path, :html => {:class => 'table table-bordered table-hover sub-total-settings-table'}

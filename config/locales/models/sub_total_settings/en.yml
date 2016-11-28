@@ -1,0 +1,9 @@
+en:
+  models:
+    sub_total_setting:
+      name: "Sub Total Setting"
+    sub_total_settings:
+      fields:
+        name: "Name"
+        value: "Value"
+        sub_total_setting_type: 'Sub Total Type'

@@ -1,0 +1,22 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@location) do |f|
+      = f.error_notification
+
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @location}
+        = f.input :name
+        = f.input :address
+        = f.input :location_list_ids, collection: LocationList.published.map{|m| [m.name, m.id]}, input_html: {class: 'select2-static', multiple:true}
+        = f.input :zip_code
+        = f.input :country_code, as: :country, input_html: {class: 'select2-static'}
+        = f.input :longitude
+        = f.input :latitude
+        = f.input :status do
+          = f.select :status, Location::STATUSES, {:selected => @location.status}, :class => 'form-control select2-static'
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), locations_path, :class => 'btn btn-default'

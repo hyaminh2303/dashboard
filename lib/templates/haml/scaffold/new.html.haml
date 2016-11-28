@@ -1,0 +1,5 @@
+- breadcrumb :<%= singular_table_name %>, @<%= singular_table_name %>
+- content_for :header do
+  = t('views.<%= plural_table_name %>.new.title')
+
+= render 'form'

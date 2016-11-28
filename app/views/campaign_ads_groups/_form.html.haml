@@ -1,0 +1,35 @@
+/ /.box-header
+/ form start
+.row
+  .col.col-lg-6
+    .box.box-info
+      .box-header
+        %h3.box-title
+        = simple_form_for [@campaign, @campaign_ads_group], url: @campaign_ads_group.new_record? ? campaign_ads_group_index_path : campaign_ads_group_path  do |f|
+          .box-body.form-inputs
+            = render :partial => '/shared/errors', locals: {model: @campaign_ads_group}
+
+            .row
+              .col.col-lg-6
+                = f.input :name
+              .col.col-lg-6
+                = f.input :keyword, input_html: (!@campaign_ads_group.new_record? and DailyTracking.where(group_id: @campaign_ads_group.id).count > 0) ? { disabled: 'disabled'} : {}
+            - if @campaign.target_per_ad_group
+              .row
+                .col.col-lg-12
+                  = f.input :target, label: @campaign.campaign_type ==  :CPM ? '* Target impression' : '* Target click'
+              .row
+                .col.col-lg-6
+                  = f.input :start_date, as: :date_picker, label: '* Start date'
+                .col.col-lg-6
+                  = f.input :end_date, as: :date_picker, label: '* End date'
+            = f.input :description, as: :text, input_html: { rows: 3}
+
+          .box-footer
+
+            - if @campaign_ads_group.new_record?
+              = f.button :submit, :value => t('views.form.add'), :class => 'btn btn-primary'
+              = link_to t('views.form.cancel'), campaigns_path, :class => 'btn btn-default'
+            - else
+              = f.button :submit, :value => t('views.form.update'), :class => 'btn btn-primary'
+              = link_to t('views.form.cancel'), campaign_ads_group_index_path, :class => 'btn btn-default'

@@ -1,0 +1,21 @@
+- breadcrumb :country_cost, @country_cost
+- content_for :header do
+  = @title
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.country_costs.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_country_cost_path(@country_cost), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontalname
+        %dl
+          %dt= t('models.country_costs.fields.country_code')
+          %dd= @country_cost.country_code
+          %dt= t('models.country_costs.fields.country_name')
+          %dd= @country_cost.country_name
+          %dt= t('models.advertiser.fields.cpc')
+          %dd= @country_cost.cpc
+          %dt= t('models.country_costs.fields.cpm')
+          %dd= @country_cost.cpm

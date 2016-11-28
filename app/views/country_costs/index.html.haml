@@ -1,0 +1,8 @@
+- breadcrumb :country_costs
+- content_for :header do
+  = @title
+
+
+= datagrid_form_for @grid, :as => :country_costs_grid, :url => country_costs_path
+
+= datagrid_table @grid, :new_path => new_country_cost_path, :html => {:class => 'table table-bordered table-hover'}

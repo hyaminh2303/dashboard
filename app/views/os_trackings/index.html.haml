@@ -1,0 +1,24 @@
+-#- breadcrumb :os_trackings
+- content_for :header do
+  = link_to @campaign.name, campaign_path(@campaign)
+.row
+  .col.col-md-6
+    .box.box-info{ng: { controller: 'ImportController', init: "init('#{@number_of_trackings > 0 ? I18n.t('models.os_tracking.validate.already_imported') : '' }')"}}
+      = simple_form_for :os_trackings, url: import_campaign_os_trackings_path(date: date_to_iso_string(@date)), enctype: 'multipart/form-data' do |f|
+        .box-body.form-inputs
+          - unless @error_messages.nil?
+            - if @error_messages.any?
+              .alert.alert-danger.alert-dismissable
+                %i.fa.fa-ban
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+                %ul
+                  - @error_messages.each do |msg|
+                    %li= msg
+          .form-group
+            = f.input :report_type, collection: @report_type, :include_blank => false, input_html: {:class => 'select2-static'}
+          .form-group
+            = f.label :file
+            = f.file_field :file
+          = f.button :submit, :value => t('views.form.import'), :class => 'btn btn-primary', 'ng-click' => 'onImportClick($event)'
+
+= datagrid_table @grid, :new_path => new_campaign_os_tracking_path(date: date_to_iso_string(@date)), :more_links => [(link_to icon_tag(:destroy) + content_tag(:span, I18n.t('datagrid.table.actions.remove_all')).html_safe,destroy_all_campaign_os_trackings_path(date: date_to_iso_string(@date)), :class => 'btn btn-primary btn-sm text-white', :title => I18n.t('datagrid.table.actions.remove_all'))], :html => {:class => 'table table-bordered table-hover'}

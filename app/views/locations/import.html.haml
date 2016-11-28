@@ -1,0 +1,18 @@
+- breadcrumb :location_import
+- content_for :header do
+  = t('views.locations.import.title')
+
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for :locations, url: import_locations_path, enctype: 'multipart/form-data' do |f|
+      .box-body.form-inputs
+        /= render :partial => '/shared/errors'
+
+        .form-group
+          = f.label :file
+          = f.file_field :file
+        .form-group
+          = f.button 'Preview', :class => 'btn btn-primary'

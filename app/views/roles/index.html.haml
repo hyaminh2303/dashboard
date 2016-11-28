@@ -1,0 +1,7 @@
+- breadcrumb :roles
+- content_for :header do
+  = t('views.roles.index.table_header')
+
+= datagrid_form_for @grid, :as => :roles_grid, :url => roles_path
+
+= datagrid_table @grid, :new_path => new_role_path, :html => {:class => 'table table-bordered table-hover'}

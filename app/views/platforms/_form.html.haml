@@ -1,0 +1,76 @@
+/ /.box-header
+/ form start
+
+= simple_form_for(@platform) do |f|
+  -# PRIMARY
+  .box.box-solid.box-primary
+    .box-header
+      %h3.box-title
+        Primary
+    .box-body.form-inputs
+      = render :partial => '/shared/errors', locals: {model: @platform}
+      = f.input :name
+  - if current_user.super_admin?
+    -# IMPORT OPTIONS
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title
+          %a{href: '#options', data: {toggle: 'collapse'}}
+            Import Options
+      #options.panel-collapse.collapse.in
+        .box-body.form-inputs
+          = f.input :opt_ext, as: :string, label: t('views.platforms.form.extension'), placeholder: 'csv'
+
+          .row
+            .col.col-md-6
+              = f.input :opt_start, as: :string, label: t('views.platforms.form.start'), placeholder: '2'
+            .col.col-md-3
+              = f.input :opt_end_col, as: :string, label: t('views.platforms.form.end_column'), placeholder: 'A'
+            .col.col-md-3
+              = f.input :opt_end_value, as: :string, label: t('views.platforms.form.end_value'), placeholder: 'nil'
+
+          .row
+            .col.col-md-6
+              = f.input :opt_title_row, as: :string, label: t('views.platforms.form.column_title_row'), placeholder: 'nil'
+            .col.col-md-3
+              = f.input :opt_date_range_col, as: :string, label: t('views.platforms.form.date_range_column'), placeholder: 'B'
+            .col.col-md-3
+              = f.input :opt_date_range_row, as: :string, label: t('views.platforms.form.date_range_row'), placeholder: '3'
+
+          %h4= t('views.platforms.form.title.group_name')
+          .row
+            .col.col-md-6
+              = f.input :opt_group_name_col, as: :string, label: t('views.platforms.form.group_name_column'), placeholder: 'A'
+            .col.col-md-6
+              = f.input :opt_group_name_skip_rows, as: :string, label: t('views.platforms.form.group_name_skip_rows'), placeholder: '1'
+
+          = f.input :opt_group_name_single_row, as: :boolean, label: t('views.platforms.form.single_row'), input_html: {class: 'flat-red'}
+
+          .row
+            .col.col-md-6
+              = f.input :opt_end_group_col, as: :string, label: t('views.platforms.form.end_group_column'), placeholder: 'A'
+            .col.col-md-6
+              = f.input :opt_end_group_value, as: :string, label: t('views.platforms.form.end_group_value'), placeholder: 'nil'
+
+          %h4= t('views.platforms.form.title.attributes')
+          .row
+            .col.col-md-6
+              = f.input :opt_attrs_date_col, as: :string, label: t('views.platforms.form.date_column'), placeholder: 'A'
+            .col.col-md-6
+              = f.input :opt_attrs_date_format, as: :string, label: t('views.platforms.form.date_format'), placeholder: ''
+          .row
+            .col.col-md-6
+              = f.input :opt_attrs_views_col, as: :string, label: t('views.platforms.form.views_column'), placeholder: 'C'
+            .col.col-md-6
+              = f.input :opt_attrs_views_delimiter, as: :string, label: t('views.platforms.form.views_delimiter'), placeholder: ','
+          .row
+            .col.col-md-6
+              = f.input :opt_attrs_clicks_col, as: :string, label: t('views.platforms.form.clicks_column'), placeholder: 'D'
+            .col.col-md-6
+              = f.input :opt_attrs_clicks_delimiter, as: :string, label: t('views.platforms.form.clicks_delimiter'), placeholder: ','
+
+          = f.input :opt_attrs_spend_col, as: :string, label: t('views.platforms.form.spend_column'), placeholder: 'F'
+
+
+  = f.button :submit, :class => 'btn btn-primary'
+  = link_to t('views.form.cancel'), platforms_path, :class => 'btn btn-default'

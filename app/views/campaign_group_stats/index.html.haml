@@ -1,0 +1,83 @@
+- breadcrumb :campaign_group_stats, @campaign
+- content_for :header do
+  = @campaign.name
+
+.row
+  .col.col-lg-4
+    .box.box-info
+      .box-body.dl-horizontal
+        = render partial: 'info', locals: { model: @campaign}
+
+    -#CAMPAIGN HEALTH
+    .box.box-info
+      .box-body.dl-horizontal
+        = render partial: 'health', locals: { campaign: @campaign}
+  -# RIGHT TABLE
+  .col.col-lg-8
+    .box.box-info
+      .box-body
+        = render partial: 'action', locals: { campaign: @campaign, report: @report}
+        - if (@location_report.nil? and @os_report.nil? and @creative_report.nil? and @device_report.nil?)
+          %div.tab-content{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignGroupStatsController' : 'UserCampaignGroupStatsController', init: "init(#{@campaign.id}, '#{Date::DATE_FORMATS[:default]}')"}}
+            = render partial: 'grid', locals: { campaign: @campaign, total: @report.total}
+        - else
+          %div{ :role => "tabpanel"}
+
+            -# Nav Tabs
+            %ul#campaign-nav-tab.nav.nav-tabs
+              %li.active{:role => "presentation"}
+                %a{:href => "#group", :data => {toggle: 'tab'}} Group
+              - if @campaign.has_location_breakdown?
+                %li{:role => "presentation"}
+                  %a{:href => "#location", :data => {toggle: 'tab'}} Location
+              - if !@os_report.nil? and @os_report.data.length > 0
+                %li{:role => "presentation"}
+                  %a{:href => "#os", :data => {toggle: 'tab'}} OS
+              - if !@creative_report.nil? and @creative_report.data.length > 0
+                %li{:role => "presentation"}
+                  %a{:href => "#creative", :data => {toggle: 'tab'}} Creatives
+              - if !@device_report.nil? and @device_report.data.length > 0
+                %li{:role => "presentation"}
+                  %a{:href => "#device", :data => {toggle: 'tab'}} Device IDs
+              - if !@pacing_report.nil? and @pacing_report.data.length > 0 and @campaign.target_per_ad_group
+                %li{:role => "presentation"}
+                  %a{:href => "#pacing", :data => {toggle: 'tab'}} Campaign Pacing
+              - if !@app_report.nil? and @app_report.data.length > 0
+                %li{:role => "presentation"}
+                  %a{:href => "#app", :data => {toggle: 'tab'}} Top App List
+
+            -# Tab panes
+            = #{agency_can_see_detail_campaign?(current_user)}
+            .tab-content
+              #group.tab-pane.active{:role => "tabpanel"}
+                %div{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignGroupStatsController' : 'UserCampaignGroupStatsController', init: "init(#{@campaign.id}, '#{Date::DATE_FORMATS[:default]}', #{agency_can_see_detail_campaign?(current_user)})"}}
+                  = render partial: 'grid', locals: { campaign: @campaign, total: @report.total}
+              - if @campaign.has_location_breakdown?
+                #location.tab-pane{:role => "tabpanel"}
+                  %div{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignLocationStatsController' : 'UserCampaignLocationStatsController', init: "init(#{@campaign.id}, #{agency_can_see_detail_campaign?(current_user)})"}}
+                    = render partial: 'location_grid', locals: { campaign: @campaign, total: @location_report.total}
+              - if !@os_report.nil? and @os_report.data.length > 0
+                #os.tab-pane{:role => "tabpanel"}
+                  %div{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignOsStatsController' : 'UserCampaignOsStatsController', init: "init(#{@campaign.id}, #{agency_can_see_detail_campaign?(current_user)})"}}
+                    = render partial: 'os_grid', locals: { campaign: @campaign, total: @os_report.total}
+              - if !@creative_report.nil? and @creative_report.data.length > 0
+                #creative.tab-pane{:role => "tabpanel"}
+                  %div{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignCreativeStatsController' : 'UserCampaignCreativeStatsController', init: "init(#{@campaign.id}, #{agency_can_see_detail_campaign?(current_user)})"}}
+                    = render partial: 'creative_grid', locals: { campaign: @campaign, total: @creative_report.total}
+              - if !@device_report.nil? and @device_report.data.length > 0
+                #device.tab-pane{:role => "tabpanel"}
+                  %div{ class: 'datatable-container', ng: { controller:  can?(:manage, Campaign) ? 'AdminCampaignDeviceStatsController' : 'UserCampaignDeviceStatsController', init: "init(#{@campaign.id}, #{@device_report.ads_group_hidden}, #{agency_can_see_detail_campaign?(current_user)})"}}
+                    = render partial: 'campaign_group_stats/device_grid', locals: { campaign: @campaign, total: @device_report.total}
+              - if !@pacing_report.nil? and @pacing_report.data.length > 0 and @campaign.target_per_ad_group
+                #pacing.tab-pane{:role => "tabpanel"}
+                  %div{ class: 'datatable-container', ng: { controller: 'AdminCampaignPacingStatsController', init: "init(#{@campaign.id}, '#{Date::DATE_FORMATS[:default]}', #{agency_can_see_detail_campaign?(current_user)})"}}
+                    = render partial: 'pacing', locals: { campaign: @campaign, total: @pacing_report.total}
+              - if !@app_report.nil? and @app_report.data.length > 0
+                - if @app_report.no_data
+                  #app.tab-pane{:role => "tabpanel"}
+                    %div{ class: 'datatable-container', ng: { controller:  'CampaignAppNoDataStatsController', init: "init(#{@campaign.id}, #{@device_report.ads_group_hidden})"}}
+                      = render partial: 'campaign_group_stats/app_grid_no_data', locals: { campaign: @campaign }
+                - else
+                  #app.tab-pane{:role => "tabpanel"}
+                    %div{ class: 'datatable-container', ng: { controller:  'CampaignAppStatsController', init: "init(#{@campaign.id}, #{@device_report.ads_group_hidden})"}}
+                      = render partial: 'campaign_group_stats/app_grid', locals: { campaign: @campaign }

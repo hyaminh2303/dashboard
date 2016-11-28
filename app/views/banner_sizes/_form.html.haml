@@ -1,0 +1,13 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@banner_size) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @banner_size}
+        = f.input :name
+        = f.input :size
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), banner_sizes_path, :class => 'btn btn-default'

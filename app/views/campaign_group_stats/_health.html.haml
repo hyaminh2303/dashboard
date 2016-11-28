@@ -1,0 +1,26 @@
+%table.table.table-bordered.table-striped
+  %tbody
+    %tr
+      %td{ width: '60%'}
+        %strong= t('views.campaign_details.fields.delivery_realized')
+      %td{ width: '40%'}= number_to_percentage(campaign.delivery_realized_percent, precision: 2)
+    %tr
+      %td
+        %strong= t('views.campaign_details.fields.delivery_expected')
+      %td= number_to_percentage(campaign.delivery_expected_percent, precision: 2)
+    %tr
+      %td
+        %strong= t('views.campaign_details.fields.campaign_health')
+      %td= number_to_percentage(campaign.health_percent, precision: 2)
+    %tr
+      %td
+        %strong= t('views.campaign_details.fields.daily_pacing')
+      %td= number_with_delimiter campaign.daily_pacing.round(0)
+    - if (can? :manage, Campaign) || (agency_can_see_detail_campaign?(current_user))
+      %tr
+        %td
+          %strong= t('views.campaign_details.fields.spend_budget')
+        - if @campaign.actual_budget_in_us != 0
+          %td= (100 * @campaign.actual_spend/@campaign.actual_budget_in_us).round(2).to_s + '%'
+        - else
+          %td= '0'

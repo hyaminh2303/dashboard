@@ -1,0 +1,8 @@
+- breadcrumb :publishers
+- content_for :header do
+  = t('views.publishers.index.table_header')
+
+
+= datagrid_form_for @grid, :as => :publishers_grid, :url => publishers_path
+
+= datagrid_table @grid, :new_path => new_publisher_path, :html => {:class => 'table table-bordered table-hover'}

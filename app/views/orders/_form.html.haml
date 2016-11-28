@@ -1,0 +1,137 @@
+.box-dashboard.box.box-primary.new-order-box{ng: {controller: 'NewOrderController', init: "init(#{@order.id || 'null'}, #{@order.authorization.to_json})"}}
+  .box-header
+    %h3.box-title
+      {{title}}
+  .box-body
+    %form{name: 'orderForm'}
+      .row
+        .col-md-2
+          .optional
+            %label.optional.control-label Date
+            %input.form-control.order-date{'close-text' => 'Close', ng: { model: 'order.date', focus: 'isDateOpen=true', required: 'true', change: 'setStartTimeEndTime(item)'}, :type => 'text', 'uib-datepicker-popup' => 'dd MMM yyyy', 'is-open' => 'isDateOpen', 'show-button-bar' => 'false'}
+        .col-md-3
+          .optional
+            %label.optional.control-label Agency
+            .controls
+              %select2{ng: {model: "order.agency_id", required: 'true'}, "s2-options" => "p.id as p.name for p in agencies", style: 'width: 100%', placeholder: 'Select Agency'}
+        .col-md-3
+          .optional
+            %label.optional.control-label Advertiser Name
+            .controls
+              %input.form-control{ng: {model: 'order.advertiser_name', required: 'true'}, placeholder: 'Advertiser Name'}
+        .col-md-2
+          .optional
+            %label.optional.control-label Currency
+            .controls
+              %select2{ng: {model: "order.currency_id", required: 'true', change: 'setMoneyIcon()'}, "s2-options" => "p.id as p.name for p in currencies", style: 'width: 100%', placeholder: 'Select Currency'}
+      .row
+        .col-md-6
+          .optional
+            %label.optional.control-label Campaign
+            .controls
+              %input.form-control{ng: {model: 'order.campaign_name', required: 'true'}, placeholder: 'Campaign Name'}
+        .col-md-4
+          .optional
+            %label.optional.control-label Sale Manager
+            .row.clearfix
+              .controls.col-md-10
+                %select2{ng: { model: "order.sale_manager_id", required: 'true' }, "s2-options" => "p.id as p.name for p in managers", style: 'width: 100%', placeholder: 'Select Sale Manager'}
+              .col-md-2
+                %a.btn.btn-primary.btn-sm{href: new_sale_manager_path, title: 'Add new Sale Manager'}
+                  %i.fa.fa-plus{style: 'margin-right: 0px;'}
+      .row
+        .col-md-12
+          %table.table.table-bordered
+            %thead
+              %tr
+                %th Country
+                %th Ad Format
+                %th Banner Size
+                %th Placement
+                %th Start Date
+                %th End Date
+                %th Type
+                %th Target
+                %th Unit Cost
+                %th Total
+                %th
+            %tbody
+              %tr{"ng-repeat" => "item in getOrderItems()"}
+                %td
+                  %textarea.form-control{rows: "1", cols: "30", ng: {model: 'item.country', required: 'true'}}
+                  / %input.form-control{ng: {model: 'item.country', required: 'true'}}
+                %td
+                  %input.form-control{ng: {model: 'item.ad_format', required: 'true'}}
+                %td
+                  / %input.form-control{ng: {model: 'item.banner_size', required: 'true'}}
+                  %textarea.form-control{rows: "1", cols: "30", ng: {model: 'item.banner_size'}}
+                %td
+                  %textarea.form-control{rows: "1", cols: "30", ng: {model: 'item.placement'}}
+                  / %input.form-control{ng: {model: 'item.placement', required: 'true'}, type: 'textarea'}
+                %td
+                  %input.form-control.start-time{'close-text' => 'Close', ng: { model: 'sad', focus: 'isStartOpen=true'}, :type => 'text', 'uib-datepicker-popup' => 'dd MMM yyyy', 'is-open' => 'isStartOpen'}
+                %td
+                  %input.form-control.start-time{'close-text' => 'Close', ng: { model: 'item.end_time', required: 'true', focus: 'isEndOpen=true', change: 'setStartTimeEndTime(item)'}, :type => 'text', 'uib-datepicker-popup' => 'dd MMM yyyy', 'is-open' => 'isEndOpen', 'show-button-bar' => 'false'}
+                %td
+                  %select2.uppercase{ng: {model: "item.rate_type", required: 'true'}, "s2-options" => "rt.value as rt.name for rt in rate_types", style: 'width: 70px', options: { containerCssClass: 'uppercase' }}
+                %td
+                  %input.form-control{ng: {model: 'item.target_clicks_or_impressions', required: 'true'}, type: 'number'}
+                %td
+                  %input.form-control{ng: {model: 'item.unit_cost', required: 'true'}, type: 'number'}
+                %td
+                  {{caculateTotal(item) | number : 2}}
+                %td
+                  %i.fa.fa-times{ng: { click:"removeRow(item)"}}
+          %input.btn.btn-primary.btn-add-new-row{name: "commit", type: "button", value: "New Item", ng: { click: 'addRow()' }}/
+        .col-md-4
+        .col-md-8
+          %table.table.table-bordered
+            %thead
+              %tr
+                %th{colspan: 4} SubTotal
+                %th
+            %tbody
+              %tr
+                %td{style: 'width: 33%'}
+                  .sub-title-strong-text Gross Budget
+                %td{style: 'width: 20%'}
+                %td{style: 'width: 20%'}
+                %td{style: 'width: 20%'}
+                  .sub-title-strong-text
+                    {{moneyIcon}} {{getGrossBudget() | number : 2}}
+              %tr{"ng-repeat" => "sub_total in getSubTotalItems()"}
+                %td
+                  %select2{ng: {model: "sub_total.sub_total_setting_id", change: 'setBudgetPercent(sub_total)', required: 'true'}, "s2-options" => "st.id as st.name for st in sub_total_settings", style: 'width: 100%', placeholder: 'SubTotal Name'}
+                %td
+                  %select2{ng: {model: "sub_total.sub_total_type", required: 'true'}, "s2-options" => "st.value as st.name for st in sub_total_types", style: 'width: 100px'}
+                %td
+                  .input-group{ng: {show: 'sub_total.sub_total_type'}}
+                    %input.form-control{ng: {model: 'sub_total.value', required: 'true'}, type: 'number'}
+                %td
+                  .sub-title-strong-text
+                    %span{ng: {if: "sub_total.sub_total_type == 'percent'"}}
+                      {{moneyIcon}} {{(getGrossBudget() * sub_total.value)/100 | number : 2}}
+                    %span{ng: {if: "sub_total.sub_total_type != 'percent'"}}
+                      {{moneyIcon}} {{sub_total.value | number : 2}}
+
+                %td
+                  %i.fa.fa-times{ng: { click:"removeSubTotalRow(sub_total)"}}
+              %tr
+                %td{colspan: 3, style: 'width: 33%'}
+                  .sub-title-strong-text Net Budget
+                %td{colspan: 2,style: 'width: 33%'}
+                  .sub-title-strong-text
+                    {{moneyIcon}} {{getNetBudget() | number : 2}}
+
+          %input.btn.btn-primary.btn-add-new-row{name: "commit", type: "button", value: "New Item", ng: { click: 'addSubTotalRow()' }}/
+
+        .col-md-12
+          %label.country.optional.control-label Additional Information
+          %textarea.form-control{rows: 12, ng: { model: "order.additional_information" , required: 'true'}}
+        .col-md-12
+          %label.country.optional.control-label Authorization
+          %div{ckeditor: "options", ng: { model: "order.authorization", required: 'true' }}
+  .box-footer.clearfix
+    %input.btn.btn-primary.pull-right.btn-cancel-order{name: "commit", type: "submit", value: "Save", ng: { click: 'submitOrder()', disabled: 'orderForm.$invalid || getOrderItems().length == 0'} }
+    / %input.btn.btn-primary.pull-right.btn-cancel-order{name: "commit", type: "submit", value: "Submit", ng: { click: 'submitOrder()'} }
+    %a.btn.btn-default.pull-right{href: orders_path} Cancel

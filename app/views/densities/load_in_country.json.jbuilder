@@ -1,0 +1,1 @@
+json.array! @densities, :id, :country_code, :city_name, :density, :population, :area

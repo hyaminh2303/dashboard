@@ -1,0 +1,12 @@
+// Place all the styles related to the CampaignGroupStats controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+//= require 'campaign_group_details.css.scss'
+
+#campaign-tracking-table {
+  &.dataTable tr td,
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}

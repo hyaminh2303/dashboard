@@ -1,0 +1,14 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@daily_est_imp) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @daily_est_imp}
+        = f.input :country_code, include_blank: 'Select All'
+        = f.input :banner_size_id, collection: BannerSize.pluck(:name, :id), include_blank: "Select banner size"
+        = f.input :impression
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), daily_est_imps_path, :class => 'btn btn-default'

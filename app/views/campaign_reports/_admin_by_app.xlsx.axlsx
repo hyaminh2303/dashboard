@@ -1,0 +1,63 @@
+wb.add_worksheet(name: 'By App') do |sheet|
+
+  sheet.column_widths nil, nil, nil, nil, 10
+
+  r = [
+    campaign.name, '', '', '', '', '',
+    t('views.campaign_reports.workbook.fields.start_date'),
+    t('views.campaign_reports.workbook.fields.end_date'),
+    campaign.campaign_type,
+    t('views.campaign_reports.workbook.fields.media_budget'), ''
+  ]
+  sheet.add_row r, style: [
+                    @title, @title, @title, @title,
+                    nil,
+                    nil, @title_with_border, @title_with_border, @title_with_border, @title_with_border
+                  ]
+  sheet.merge_cells 'A1:E1' # Campaign Title
+
+  r = [
+    'No.','App Name',
+    t('views.campaign_details.fields.views'),
+    t('views.campaign_details.fields.clicks'),
+    t('views.campaign_details.fields.ctr'),
+    '',
+    campaign.active_at.strftime(Date::DATE_FORMATS[:iso]),
+    campaign.expire_at.strftime(Date::DATE_FORMATS[:iso]),
+    get_unit_price(campaign, :local).format,
+    get_budget(campaign, :local).format
+  ]
+  s = [ @head, @head, @head, @head, @head, nil, @border, @border, @border, @border, @border, @border, @border]
+
+
+  sheet.add_row r, style: s
+
+  cell = Reports::Helpers::AdminFormula.new 3, views: 'C', clicks: 'D'
+
+  cell.chart_from = cell.row
+
+  data.each do |d|
+    if d.views == -1 && d.clicks == -1
+      sheet.add_row [
+                      cell.row - 2,
+                      d.app_name,
+                      '', '', ''
+                  ], style: [@cell_border_left, @cell_border_left, @border, @border, @border]
+    else
+      sheet.add_row [
+                      cell.row - 2,
+                      d.app_name,
+                      d.views == -1 ? '' : d.views,
+                      d.clicks == -1 ? '' : d.clicks,
+                      cell.ctr
+                    ], style: [@cell_border_left, @cell_border_left, @cell_border, @cell_border, @percent_with_border]
+    end
+    cell.current_row_to_sum_list
+    cell.next
+  end
+
+  cell.chart_to = cell.row
+
+  cell.next
+
+end

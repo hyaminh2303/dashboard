@@ -1,0 +1,12 @@
+- if can?(:manage, Campaign) || agency_can_see_detail_campaign?(current_user)
+  = link_to t('views.campaign_details.actions.export_report'), export_campaign_report_path(campaign),
+        :id => 'export_daily_report',
+        :class => "btn btn-primary",
+        :title => t('views.campaign_details.actions.export_report')
+
+- if can? :manage, Campaign
+  = link_to t('views.campaign_details.actions.export_report_as_agency'), export_as_agency_campaign_report_path(campaign),
+        :id => 'export_daily_report_as_agency',
+        :class => "btn btn-primary #{report.length == 0 ? 'disabled' : ''}",
+        :title => t('views.campaign_details.actions.export_report_as_agency')
+  = link_to campaign.is_notified ? 'Already notified' : 'Notify to finance', notify_campaign_group_stats_path(campaign), :class => 'btn btn-success btn-notify', disabled: campaign.is_notified

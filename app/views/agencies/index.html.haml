@@ -1,0 +1,50 @@
+- breadcrumb :agencies
+- content_for :header do
+  = t('views.agencies.index.table_header')
+
+
+-#= datagrid_form_for @grid, :as => :agencies_grid, :url => agencies_path
+-#
+-#= datagrid_table @grid, :new_path => new_agency_path, :html => {:class => 'table table-bordered table-hover'}
+
+%div{ng: {controller: 'AgenciesListController', init: 'init()'}}
+  .row
+    .col-lg-6.col-xs-6
+      .box.box-info
+        .box-header
+          %h3.box-title Search
+
+        = simple_form_for :agencies_form do |f|
+          .box-body
+            = f.input :name, as: :string, required: false, input_html: {:'ng-model' => 'search_name'}
+            = f.input :email, as: :string, required: false, input_html: {:'ng-model' => 'search_email'}
+            = f.input :country_code, as: :country, required: false, include_blank: true, input_html: {class: 'select2-static', :'ng-model' => 'search_country_code'}
+          .box-footer
+            = f.button :button, 'Search', type: 'button', class: 'btn btn-primary', :'ng-click' => 'onSearch()'
+            = f.button :button, 'Reset', type: 'button', class: 'btn btn-default', :'ng-click' => 'onReset()'
+
+  .box.box-info
+    .box-body
+      %div.table-actions
+        %a.btn.btn-primary.btn-sm.text-white{:href => new_agency_path, :title => t('datagrid.table.actions.add')}
+          %i.glyphicon.glyphicon-plus
+          %span= t('datagrid.table.actions.add')
+      %table.table.table-bordered{ id: 'agencies-list-table'}
+        %thead
+          %tr
+            %th{width: '30%'} Name
+            %th{width: '20%'} Country
+            %th{width: '20%'} Email
+            %th{width: '10%'} Show Finance
+            %th{width: '10%'} Enabled
+            %th{width: '5%'} Action
+            %th{width: '5%'}
+        %tfoot
+          %tr
+            %th Name
+            %th Country
+            %th Email
+            %th Show finance
+            %th Enabled
+            %th Action
+            %th

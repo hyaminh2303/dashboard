@@ -1,0 +1,36 @@
+// Place all the styles related to the Agencies controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.table-actions {
+  margin-bottom: 20px;
+}
+
+.dataTable tr td,
+.dataTable tr.odd td {
+  background-color: #f3f4f5;
+}
+
+.dataTable tr.sub td {
+  background-color: #ffffff;
+  border-right: none !important;
+  border-left: none !important;
+}
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+  padding-left: 10px;
+}
+
+tr.has-expand-rows td.details-control {
+  background-image: image_url('details_open.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+}
+
+tr.has-expand-rows.shown td.details-control {
+  background-image: image_url('details_close.png');
+}

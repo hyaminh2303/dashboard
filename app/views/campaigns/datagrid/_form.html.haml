@@ -1,0 +1,18 @@
+.row
+  .col-lg-6.col-xs-6
+    .box.box-info
+      .box-header
+        %h3.box-title Search
+      = form_for grid, options.merge({:role => 'form'}) do |f|
+        .box-body
+          - grid.filters.group_by{|f| f.options[:group]}.map do |group, filters|
+            .row{class: "#{ 'hidden' if current_user.is_agency_or_client? && group==1}"}
+              - filters.each do |filter|
+                %div{class: "col-md-#{ 12/filters.size }"}
+                  .form-group
+                    = f.datagrid_label filter
+                    = f.datagrid_filter filter, {:class => 'form-control'}.merge(filter.options[:html] || {})
+        .box-footer
+          = f.submit I18n.t('datagrid.form.search').html_safe, :class => 'btn btn-primary'
+          - empty_parameter = Rails.version >= "4.1.0" && Rails.version <= '4.1.2' ? nil : {}
+          = link_to I18n.t('datagrid.form.reset').html_safe, url_for(grid.to_param => empty_parameter), :class => 'btn btn-default'

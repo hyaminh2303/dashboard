@@ -1,0 +1,49 @@
+= form_for grid, options.merge({:role => 'form'}) do |f|
+  = f.hidden_field :data_filter_from, value: grid[grid.filters[1].name].first, disabled: 'disabled'
+  = f.hidden_field :data_filter_to, value: grid[grid.filters[1].name].last, disabled: 'disabled'
+
+  .col-lg-2
+    = f.datagrid_filter grid.filters[0], {:class => ''}.merge(grid.filters[0].options[:html] || {})
+  .col-lg-5
+    = f.datagrid_filter grid.filters[1], {:class => ''}.merge(grid.filters[1].options[:html] || {})
+.row
+  .col-md-12
+    .nav-tabs-custom
+      %ul.nav.nav-tabs
+        %li.active
+          = link_to 'Chart', '#chart', data: {toggle: 'tab'}, style: 'text-transform:capitalize;'
+        %li
+          = link_to 'Impression Heat Map', '#heat-map', data: {toggle: 'tab', type: 'impression'}, style: 'text-transform:capitalize;'
+        %li
+          = link_to 'Click Heat Map', '#heat-map', data: {toggle: 'tab', type: 'click'}, style: 'text-transform:capitalize;'
+      .tab-content
+        #chart.tab-pane.active
+          .row
+            .col-md-12
+            #box-chart.col-lg-12
+              .alert.alert-warning.hidden_only= I18n.t('views.statss.message.no_data')
+              #stats_chart
+          .row.stats-buttons
+            .col-lg-12
+              .btn-group.btn-group-justified{data: {toggle: :buttons}}
+                .btn.btn-default.btn_stat_views.active{ ng: { click: 'loadChart(0)' }}
+                  %input#views_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+                  %i.ion.ion-stats-bars.pull-left
+                  .stats-content.pull-left
+                    Views
+                    %p{ng: { bind: 'views' }}
+                .btn.btn-default.btn_stat_clicks{ ng: { click: 'loadChart(1)' }}
+                  %input#clicks_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+                  %i.ion.ion-stats-bars.pull-left
+                  .stats-content.pull-left
+                    Clicks
+                    %p{ng: { bind: 'clicks' }}
+                - if (can? :manage, Campaign) || agency_can_see_detail_campaign?(current_user)
+                  .btn.btn-default.btn_stat_budget_spent{ ng: { click: 'loadChart(2)' }}
+                    %input#budget_spent_stats{type: 'radio', name: 'options', autocomplete: 'off'}
+                    %i.ion.ion-stats-bars.pull-left
+                    .stats-content.pull-left
+                      Budget Spent
+                      %p{ng: { bind: 'budget' }}
+        #heat-map.tab-pane{'ng-controller' => 'HeatMapController'}
+          = render partial: 'home/heat_map'

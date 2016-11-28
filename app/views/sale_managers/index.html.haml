@@ -1,0 +1,70 @@
+
+.box-dashboard{ng: {controller: 'SaleManagerController'}}
+  .row
+    .col-lg-6.col-xs-6
+      .box.box-info
+        .box-header
+          %h3.box-title Search
+        .box-body
+          .row
+            .col-lg-6
+              %label.label-input Name
+              %input.form-control.string_filter{ng: {model: 'query.name'}, placeholder: "Type something ..."}
+            .col-lg-6
+              %label.label-input Phone
+              %input.form-control.string_filter{ng: {model: 'query.phone'}, placeholder: "Type something ..."}
+          %br
+          .row
+            .col-lg-6
+              %label.label-input Address
+              %input.form-control.string_filter{ng: {model: 'query.address'}, placeholder: "Type something ..."}
+            .col-lg-6
+              %label.label-input Email
+              %input.form-control.string_filter{ng: {model: 'query.email'}, placeholder: "Type something ..."}
+        .box-footer
+          %button.btn.btn-primary{ng: {click: 'search()'}} Search
+          %button.btn.btn-default{ng: {click: 'reset()'}} Reset
+  .box.box-info
+    .box-header
+      %h3.box-title Sale Managers
+    .box-body
+      %a{href: '/sale_managers/new', class: 'btn btn-primary btn-sm text-white'}
+        %i{class: 'glyphicon glyphicon-plus'}
+        Add Sale Manager
+      %table.table.table-bordered.table-hover.table-sale{"st-table" => "rows", "st-pipe" => "refresh", "st-safe-src" => "rows"}
+        %colgroup
+          %col{:span => "1"}
+          %col{:span => "1"}
+          %col{:span => "1"}
+          %col{:span => "1"}
+          %col{:span => "1", :style => "width: 2%;"}
+        %thead
+          %tr
+            %th{"st-sort" => "name"} Name
+            %th{"st-sort" => "phone"} Phone
+            %th{"st-sort" => "email"} Email
+            %th{"st-sort" => "address"} Address
+            %th.actions
+        %tbody
+          %tr{ng: {repeat: 'row in rows', class: 'getTemplate(row)'}, "st-select-row" => "row"}
+            %td {{row.name}}
+            %td {{row.phone}}
+            %td {{row.email}}
+            %td {{row.address}}
+            %td
+              .dropdown
+                %button.btn-default.btn-white.dropdown-toggle{"data-toggle" => "dropdown", "aria-expanded" => "false"}
+                  %span.ace-icon.fa.fa-cog
+                %ul.dropdown-menu
+                  %li
+                    %a{ng: {href: '/sale_managers/{{row.id}}/edit/'}} 
+                      %i.glyphicon.glyphicon-edit
+                        Edit
+                  %li
+                    %a{ng: {href: '', click: 'onDelete(row.id)'}} 
+                      %i.glyphicon.glyphicon-trash
+                        Delete
+        %tfoot
+          %tr
+            %td.text-center{:colspan => "6"}
+              %div{"st-displayed-pages" => "5", "st-items-by-page" => "20", "st-pagination" => ""}

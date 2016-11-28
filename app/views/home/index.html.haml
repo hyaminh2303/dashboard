@@ -1,0 +1,15 @@
+%script{:src => "http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"}
+
+- content_for :header do
+  = @title
+- is_display_spend = agency_can_see_detail_campaign?(current_user) || can?(:manage, Campaign)
+.box-dashboard.box-loading{ng: {controller: 'IndexController', init: "init(#{current_user.is_agency_or_client?}, #{is_display_spend})"}}
+  .box.box-info
+    .box-header
+      %h3.box-title{ng: { bind: 'campaign_name' }}
+    .box-body
+      = datagrid_form_for @grid, :as => :stats_grid, :url => root_path, :partials => 'home/datagrid'
+      %div.dashboard
+        = datagrid_table @grid, :new_path => can?(:manage, Campaign) ? new_campaign_path : false, :html => {:class => 'table table-bordered table-hover', id: 'stats_table'}, :partials => 'home/datagrid'
+  .overlay.loading.hidden_only
+  .loading-img.loading.hidden_onl

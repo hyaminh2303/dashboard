@@ -1,0 +1,2 @@
+= render :partial => 'shared/actions',
+  :locals => {confirmation: t('messages.destroy.confirmation', model_name: model.class.name, name: model.name), :paths => { :show_path => platform_path(model), :edit_path => edit_platform_path(model), :delete_path => platform_path(model) } }

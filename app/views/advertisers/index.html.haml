@@ -1,0 +1,8 @@
+- breadcrumb :advertisers
+- content_for :header do
+  = t('views.advertisers.index.table_header')
+
+
+= datagrid_form_for @grid, :as => :advertisers_grid, :url => advertisers_path
+
+= datagrid_table @grid, :new_path => new_advertiser_path, :html => {:class => 'table table-bordered table-hover'}

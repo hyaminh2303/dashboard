@@ -1,0 +1,23 @@
+- breadcrumb :density, @density
+- content_for :header do
+  = @title
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.densities.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_density_path(@density), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontalname
+        %dl
+          %dt= t('models.densities.fields.country_code')
+          %dd= @density.country_code
+          %dt= t('models.densities.fields.city_name')
+          %dd= @density.city_name
+          %dt= t('models.densities.fields.density')
+          %dd= @density.density
+          %dt= t('models.advertiser.fields.population')
+          %dd= @density.population
+          %dt= t('models.densities.fields.area')
+          %dd= @density.area

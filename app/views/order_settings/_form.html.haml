@@ -1,0 +1,43 @@
+= form_tag(update_all_order_settings_path(), {:multipart => true} ) do |f|
+  -# PRIMARY
+  .box.box-solid.box-success
+    .box-header
+      %h3.box-title
+        %a{href: '#logo', data: {toggle: 'collapse'}}
+          Yoose's Logo
+    #logo.panel-collapse.collapse.in
+      .box-body.form-inputs.yoose-logo
+        - if OrderSetting.logo == ""
+          %h4.no-logo
+            NO LOGO
+        - else
+          = image_tag OrderSetting.logo
+        %hr
+        = file_field_tag :logo
+
+  .box.box-solid.box-info
+    .box-header
+      %h3.box-title
+        %a{href: '#options', data: {toggle: 'collapse'}}
+          General Informations
+    #options.panel-collapse.collapse.in
+      .box-body.form-inputs
+        = label_tag :slogan, 'Slogan'
+        = text_field_tag :slogan, OrderSetting.slogan, label: 'Slogan', class: 'form-control'
+        %br
+        = label_tag :address, 'Address'
+        = text_area_tag :address, OrderSetting.address, :class => 'ckeditor'
+        %hr
+        = label_tag :terms_and_conditions, 'Terms and Coditions'
+        = text_area_tag :terms_and_conditions, OrderSetting.terms_and_conditions, :class => 'ckeditor'
+        %hr
+        = label_tag :authorization, 'Authorization'
+        = text_area_tag :authorization, OrderSetting.authorization, :class => 'ckeditor'
+        %hr
+        = label_tag :amendment, 'Amendment'
+        = text_area_tag :amendment, OrderSetting.amendment, :class => 'ckeditor'
+
+  = button_tag 'Update Settings', :class => 'btn btn-primary'
+  = link_to t('views.form.cancel'), root_path, :class => 'btn btn-default'
+
+

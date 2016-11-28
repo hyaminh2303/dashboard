@@ -1,0 +1,16 @@
+#register-box.form-box
+  .header Register New Membership
+  = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+    .body.bg-gray
+      = render :partial => '/users/shared/errors', locals: {model: resource}
+      .form-group
+        = f.email_field :email, autofocus: true, :class => 'form-control', :placeholder => 'Email'
+      .form-group
+        = f.text_field :name, :class => 'form-control', :placeholder => 'Name'
+      .form-group
+        = f.password_field :password, autocomplete: 'off', :class => 'form-control', :placeholder => 'Password'
+      .form-group
+        = f.password_field :password_confirmation, autocomplete: 'off', :class => 'form-control', :placeholder => 'Confirm Password'
+    .footer
+      = f.submit 'Sign up', :class => 'btn bg-yoose btn-block'
+      = render 'users/shared/links'

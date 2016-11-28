@@ -1,0 +1,21 @@
+title = t('models.platform_usage.name')
+table = {
+    title: [title],
+    head: [t('models.platform_usage.fields.platform'), t('models.platform_usage.fields.impressions'), t('models.platform_usage.fields.spend')],
+    data: {
+        model: @platform_usage,
+        columns: { name: :bold, views: :number, spend: :money },
+    },
+    start_index: [@region_country_and_platform.y , 7],
+    border: true,
+}
+
+region = @sheet_render.add_table table, @region_country_and_platform
+
+graph = {
+    title: title,
+    start_at: [5, @region_country_and_platform.y_end + 1],
+    end_at: [10, @region_country_and_platform.y_end + 10],
+    region: region,
+}
+@sheet_render.add_pie_graph_from_region graph

@@ -1,0 +1,7 @@
+- breadcrumb :<%= plural_table_name %>
+- content_for :header do
+  = t('views.<%= plural_table_name %>.index.table_header')
+
+= datagrid_form_for @grid, :as => :<%= plural_table_name %>_grid, :url => <%= plural_table_name %>_path
+
+= datagrid_table @grid, :new_path => new_<%= singular_table_name %>_path, :html => {:class => 'table table-bordered table-hover'}

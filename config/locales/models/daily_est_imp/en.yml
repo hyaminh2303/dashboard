@@ -1,0 +1,4 @@
+en:
+  models:
+    daily_est_imp:
+      name: 'Daily Estimate Impression'

@@ -1,0 +1,6 @@
+- paths = { :show_path => user_path(model), :edit_path => edit_user_path(model)}
+
+- unless model.is_agency?
+  - paths[:delete_path] = user_path(model)
+
+= render :partial => 'shared/actions', :locals => { :paths => paths }

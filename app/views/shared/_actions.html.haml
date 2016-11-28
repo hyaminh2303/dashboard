@@ -1,0 +1,9 @@
+= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-eye-open'), paths[:show_path], :class => 'btn btn-primary btn-xs', :title => t('datagrid.table.actions.show')
+= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), paths[:edit_path], :class => 'btn btn-warning btn-xs', :title => t('datagrid.table.actions.edit')
+
+- if paths[:duplicate_path]
+  = link_to content_tag(:span, '', :class => 'glyphicon fa fa-fw fa-copy'), paths[:duplicate_path], :class => 'btn btn-default btn-xs', :title => t('datagrid.table.actions.duplicate')
+
+- if paths[:delete_path]
+  = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-remove'),                                                                                 |
+  paths[:delete_path], method: :delete, data: {confirm: defined?(confirmation) ? confirmation : 'Are you sure?'}, :class => 'btn btn-danger btn-xs', :title => t('datagrid.table.actions.delete') |

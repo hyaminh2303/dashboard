@@ -1,0 +1,13 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@<%= singular_table_name %>) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @<%= singular_table_name %>}
+      <%- attributes.each do |attribute| -%>
+        = f.<%= attribute.reference? ? :association : :input %> :<%= attribute.name %>
+      <%- end -%>
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), <%= plural_table_name %>_path, :class => 'btn btn-default'

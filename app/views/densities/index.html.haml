@@ -1,0 +1,7 @@
+- breadcrumb :densities
+- content_for :header do
+  = @title
+
+= datagrid_form_for @grid, :as => :densities_grid, :url => densities_path
+
+= datagrid_table @grid, :new_path => new_density_path, :html => {:class => 'table table-bordered table-hover'}

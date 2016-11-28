@@ -1,0 +1,16 @@
+= simple_form_for(@campaign, url: import_signed_io_campaigns_path(), :html => {:multipart => true} ) do |f|
+  .box.box-solid.box-info
+    .box-header
+      %h3.box-title
+        %a{href: '#import-io', data: {toggle: 'collapse'}}
+          Attach signed IO (pdf, doc, docx, jpg, png, jpeg): 
+          = @campaign.name
+    #import-io.panel-collapse.collapse.in
+      .box-body.form-inputs
+        = f.file_field :signed_io
+        %hr
+        - if @campaign.is_attached_io
+          = f.button :submit, 'Upload', :class => 'btn btn-primary', data: { confirm: 'This campaign already has a signed IO, do you want to override it?' }
+        - else
+          = f.button :submit, 'Upload', :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), root_path, :class => 'btn btn-default'

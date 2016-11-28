@@ -1,0 +1,15 @@
+- breadcrumb :campaign_ads_group, @campaign_ads_group
+- content_for :header do
+  = t('views.campaign_ads_groups.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.campaign_ads_groups.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_campaign_ads_group_path(@campaign_ads_group), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+      / /.box-body
+    / /.box

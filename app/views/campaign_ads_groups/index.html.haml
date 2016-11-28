@@ -1,0 +1,7 @@
+- breadcrumb :campaign_ads_groups
+- content_for :header do
+  = @campaign.name
+
+= render 'form'
+
+= datagrid_table @grid, :html => {:class => 'table table-bordered table-hover'}

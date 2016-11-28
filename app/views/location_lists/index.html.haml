@@ -1,0 +1,8 @@
+- breadcrumb :location_lists
+- content_for :header do
+  = t('views.location_lists.index.table_header')
+
+
+= datagrid_form_for @grid, :as => :location_lists_grid, :url => location_lists_path
+
+= datagrid_table @grid, :new_path => new_location_list_path, :html => {:class => 'table table-bordered table-hover'}

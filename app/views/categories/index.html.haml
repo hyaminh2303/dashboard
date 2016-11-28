@@ -1,0 +1,7 @@
+- breadcrumb :categories
+- content_for :header do
+  = t('views.categories.index.table_header')
+
+= datagrid_form_for @grid, :as => :categories_grid, :url => categories_path
+
+= datagrid_table @grid, :new_path => new_category_path, :html => {:class => 'table table-bordered table-hover'}

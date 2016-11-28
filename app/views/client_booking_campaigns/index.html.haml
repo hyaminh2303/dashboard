@@ -1,0 +1,102 @@
+%div.client-campaign{ ui: { view: '' } }
+  .row
+    .col-md-6
+      .box.box-info
+        .box-header
+          %h3.box-title Search
+        .box-body
+          .row.search-orders-form
+            .col-md-12
+              .form-group.optional.agencies_form_country_code
+                %label.optional.control-label Campaign name
+                .controls
+                  %input.form-control{ng: { model: 'campaign_name' }, placeholder: 'Campaign name'}
+            .col-md-12
+              .form-group.optional.agencies_form_country_code
+                %label.optional.control-label Advertiser name
+                .controls
+                  %input.form-control{ng: { model: 'advertiser_name' }, placeholder: 'Advertiser name'}
+            .col-md-12
+              .form-group.optional.agencies_form_country_code
+                %label.optional.control-label Status
+                .controls
+                  %select2.form-control{ng: {model: "status", required: 'true'}, "s2-options" => "st.key as st.label for st in statuses", placeholder: 'Status'}
+        .box-footer
+          %input.btn.btn-primary{name: "commit", type: "submit", value: "Search", ng: { click: 'searchCampaign()' }}/
+          %input.btn.btn-default{name: "commit", type: "submit", value: "Reset", ng: { click: 'resetCampaignFilter()' }}/
+
+  .box.box-info
+    .box-header
+      %h3.box-title Request Campaigns
+    .box-body
+      %alert{ng: {show: 'message'}, type: 'info', close: 'closeAlert()'}
+        {{message}}
+      %a{href: '/client_booking_campaigns/#/new', class: 'btn btn-primary btn-sm text-white'}
+        %i{class: 'glyphicon glyphicon-plus'}
+        Add New Request
+      %table.table.table-platform.table-bordered.table-hover{"st-table" => "client_booking_campaigns", "st-pipe" => "refresh"}
+        %thead
+          %tr
+            %th{"st-sort" => ""} Request ID
+            %th{"st-sort" => "campaign_name"} Campaign Name
+            %th{"st-sort" => "advertiser_name"} Advertiser Name
+            %th{"st-sort" => "start_date"} Start Date
+            %th{"st-sort" => "end_date"} End Date
+            %th{"st-sort" => "target"} Target
+            %th{"st-sort" => "unit_price"} Unit Price
+            %th{"st-sort" => "budget"} Budget
+            %th{"st-sort" => "campaign_type"} Type
+            %th{"st-sort" => "status"} Status
+            %th.actions
+        %tbody
+          %tr{ng: {repeat: 'client_booking_campaign in client_booking_campaigns'}, "st-select-client_booking_campaign" => "client_booking_campaign"}
+            %td
+              {{client_booking_campaign.id}}
+            %td
+              {{client_booking_campaign.campaign_name}}
+            %td
+              {{client_booking_campaign.advertiser_name}}
+            %td
+              {{client_booking_campaign.start_date | date: 'dd MMM yy'}}
+            %td
+              {{client_booking_campaign.end_date | date: 'dd MMM yy'}}
+            %td
+              {{client_booking_campaign.target}}
+            %td
+              {{client_booking_campaign.unit_price}}
+            %td
+              {{client_booking_campaign.budget}}
+            %td{class: 'campaign-type'}
+              {{client_booking_campaign.campaign_type}}
+            %td
+              %div.status-column{'ng-bind-html' => 'getStatusText(client_booking_campaign)'}
+            %td
+              .btn-group.pull-right{ng: {show: "client_booking_campaign.id"}}
+                %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+                  %span.glyphicon.glyphicon-cog
+                  %span.sr-only Toggle Dropdown
+                %ul.dropdown-menu{:role => "menu"}
+                  %li
+                    %a{:href => "/client_booking_campaigns/#/edit/{{client_booking_campaign.id}}", :title => "Edit"}
+                      %i.glyphicon.glyphicon-edit>
+                      Edit
+                  - if current_user.admin? || current_user.super_admin?
+
+                    %li
+                      %a{ng: { href: "/campaigns/{{client_booking_campaign.id}}/generate" }, :title => "Generate Campaign"}
+                        %i.glyphicon.glyphicon-edit>
+                        Generate Campaign
+
+                  %li
+                    %a{ng: {click: 'deleteCampaign(client_booking_campaign.id)'}, :title => "Delete"}
+                      %i.glyphicon.glyphicon-remove>
+                      Delete
+                  - if current_user.admin? || current_user.super_admin?
+                    %li{ng: {show: 'isDisplayApproveLink(client_booking_campaign)'}}
+                      %a{ng: {click: 'approveCampaign(client_booking_campaign.id)'}, :title => "Approve"}
+                        %i.glyphicon.glyphicon-ok>
+                        Approve
+                    %li{ng: {show: 'isDisplayCloseLink(client_booking_campaign)'}}
+                      %a{ng: {click: 'closeCampaign(client_booking_campaign.id)'}, :title => "Close"}
+                        %i.glyphicon.glyphicon-remove>
+                        Close

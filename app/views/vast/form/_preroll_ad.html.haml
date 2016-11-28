@@ -1,0 +1,32 @@
+//Preroll Ad
+.panel.box.box-solid.box-primary
+  .box-header
+    %h4.box-title
+      %a{href: '#preroll-ad', data: {toggle: 'collapse', parent: '#accordion'}}
+        Preroll Ad
+  #preroll-ad.option-params.panel-collapse
+    .box-body
+      = f.simple_fields_for :linear_ads do |c|
+        .row
+          .col-xs-6
+            = c.input :skipoffset, placeholder: '00:10:00 or 10%'
+          .col-xs-6
+            = c.input :duration, placeholder: '00:30:00'
+        = c.simple_fields_for :media_files do |c2|
+          = c2.input :media_type, collection: VastGenerator::MediaFile::MEDIA_TYPES, include_blank: 'Choose media type', input_html: {class: 'select2-static'}
+          .row
+            .col-xs-8
+              = c2.input :url, label: 'Media URL', placeholder: 'http://im-dev.s3.amazonaws.com/image_server/templates/campaign_16/video.mp4'
+            .col-xs-4
+              = c2.input :media, as: :file, label: 'Upload file', input_html: {class: 'btn-file-input'}
+          .row
+            .col-md-6
+              = c2.input :width, as: :integer, placeholder: '800'
+            .col-md-6
+              = c2.input :height, as: :integer, placeholder: '600'
+        = c.input :click_through, label: 'Click Through URL', placeholder: 'http://im.l.dev.s3-website-eu-west-1.amazonaws.com/16/index.html'
+        = c.simple_fields_for :click_trackings do |c2|
+          = c2.input :url, label: 'Click Tracking URL', placeholder: 'http://pubads.g.doubleclick.net/gampad/clk?id=94677177&iu=/3595/NZ_Entertainment_MobGeo'
+        = c.simple_fields_for :tracking_events do |c2|
+          = c2.input :event, collection: VastGenerator::TrackingEvent::EVENTS, include_blank: 'Choose event type', input_html: {class: 'select2-static'}
+          = c2.input :url, label: 'Tracking event URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/trackingevents/;campaign=oid270981777adid94672737;sz=1x1'

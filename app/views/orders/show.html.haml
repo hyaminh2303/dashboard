@@ -1,0 +1,31 @@
+- breadcrumb :order, @order
+- content_for :header do
+  = t('views.orders.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.orders.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_order_path(@order), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          / %dt= t('models.order.fields.name')
+          / %dd= @order.name
+          / %dt= t('models.order.fields.campaign')
+          / %dd= @order.campaign.name
+          / %dt= t('models.order.fields.publisher')
+          / %dd= @order.publisher.name
+          / %dt= t('models.order.fields.status')
+          / - if @order.status==Order::STATUS_PUBLISHED
+          /   %dd
+          /     = link_to content_tag('i', '', :class => 'ion-checkmark-circled').html_safe, "",:class => 'text-green', :title => t('statuses.published')
+          / - elsif @order.status==Order::STATUS_EXPIRED
+          /   %dd
+          /     = link_to content_tag('i', '', :class => 'ion-close-circled').html_safe, "",:class => 'text-red', :title => t('statuses.expired')
+          / - else
+          /   %dd
+          /     = link_to content_tag('i', '', :class => 'ion-help-circled').html_safe, "",:class => 'text-blue', :title => t('statuses.pending')
+      / /.box-body
+    / /.box

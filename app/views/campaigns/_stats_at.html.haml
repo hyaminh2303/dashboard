@@ -1,0 +1,3 @@
+- date = model.last_stats_at
+%span{ class: "#{'high-light-date' if date && date < Date.yesterday && model.expire_at >= Date.today}" }
+  = date

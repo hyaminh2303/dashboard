@@ -1,0 +1,22 @@
+/ /.box-header
+/ form start
+.box.box-info
+  .box-header
+    %h3.box-title
+    = simple_form_for [@campaign, @location_tracking], url: @location_tracking.new_record? ? campaign_location_trackings_path(date: date_to_iso_string(@date)) : campaign_location_tracking_path(date: date_to_iso_string(@date)) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @location_tracking}
+
+        -#= f.input :date, as: :string, input_html: { value: @date.strftime(Date::DATE_FORMATS[:rails_datepicker_default]), disabled: 'disabled'}
+
+        = f.input :name
+
+        - if @location_tracking.new_record?
+          = f.association :location, input_html: { :class => 'select2-static'}
+        -#- else
+        -#  = f.association :location, input_html: { disabled: 'disabled'}
+
+        = f.input :views
+        = f.input :clicks
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to 'Cancel', campaign_location_trackings_path(date: date_to_iso_string(@date)), :class => 'btn btn-default'

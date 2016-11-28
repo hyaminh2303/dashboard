@@ -1,0 +1,35 @@
+.row
+  .col-md-12
+    #heat-map-panel{data:{'placement' => 'left', 'toggle' => 'tooltip'}, :title => 'Drag to zoom intensity'}
+      %input.slider.form-control{data:{'slider-id' => 'blue', 'slider-orientation' => 'vertical', 'slider-selection' => 'before', 'slider-step' => '1'}, :type => 'text', 'ng-slide' => 'zoomIntensity($event)'}
+    .alert.alert-warning.hidden_only There is no location breakdown data in the selected period
+    .heat-map-map
+#play-controller.row
+  .col-md-1
+    %a#play-button.btn.btn-sm.btn-primary.btn-block{:href => 'javascript:;', :title => 'Play', 'ng-click' => 'playOrStop()'}
+      %i.glyphicon.glyphicon-play
+  .col-md-1
+    %a#restart-button.btn.btn-sm.btn-primary.btn-block{:href => 'javascript:;', :title => 'Restart', 'ng-click' => 'restart()'}
+      %i.glyphicon.glyphicon-refresh
+  .col-md-5
+    .progress.heat-map-progress
+      .progress-bar.bg-darkblue{:role => 'progressbar', :style => 'width: 10%;'}
+  .col-md-2
+    .btn-group
+      %button#heat-map-previous.btn.btn-sm.btn-primary{:title => 'Back', 'ng-click' => 'selectPreviousDay()'}
+        %i.glyphicon.glyphicon-step-backward
+      %button#heat-map-next.btn.btn-sm.btn-primary{:title => 'Next', 'ng-click' => 'selectNextDay()'}
+        %i.glyphicon.glyphicon-step-forward
+  .col-md-3
+    .btn-group.pull-right
+      %button.btn.btn-sm.bg-darkred
+        %b#heat-map-day Day 1
+      %a.btn.btn-sm.dropdown-toggle{data:{'toggle' => 'dropdown'}, :href => '#'}
+        %span#heat-map-date 2012-12-01
+        %span.caret
+      %ul.dropdown-menu
+        %li{ 'ng-repeat' => 'day in data'}
+          %a.heat-map-select-day{data:{'index' => "{{$index}}"}, :href => 'javascript:;', 'ng-click' => 'selectDay($event)'}
+            %b{data:{'index' => "{{$index}}", :style => 'padding-right:30px;'}}
+              Day {{pad($index + 1)}}
+            %span{data:{'index' => "{{$index}}"}} {{pad(day.year)}}-{{pad(day.month)}}-{{pad(day.day)}}

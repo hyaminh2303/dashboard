@@ -1,0 +1,8 @@
+- breadcrumb :banner_sizes
+- content_for :header do
+  = @title
+
+
+= datagrid_form_for @grid, :as => :banner_sizes_grid, :url => banner_sizes_path
+
+= datagrid_table @grid, :new_path => new_banner_size_path, :html => {:class => 'table table-bordered table-hover'}

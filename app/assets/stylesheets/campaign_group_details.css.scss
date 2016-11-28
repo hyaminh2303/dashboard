@@ -1,0 +1,93 @@
+// Place all the styles related to the CampaignDetails controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.tab-content {
+  margin-top: 20px;
+}
+
+#campaign-nav-tab {
+  margin-top: 20px;
+}
+
+#campaign-tracking-table {
+  &.dataTable.admin tr td,
+  &.dataTable.user tr.odd td {
+    background-color: #f3f4f5;
+  }
+
+  &.dataTable tr.sub td {
+    background-color: #ffffff;
+    border-right: none !important;
+    border-left: none !important;
+  }
+}
+
+#campaign-location-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}
+
+#campaign-os-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}
+
+#campaign-creative-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}
+
+#campaign-app-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}
+
+#campaign-pacing-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+
+  .health_level_1{
+    background-color: #FF7859 !important;
+  }
+  .health_level_2{
+    background-color: #FFFFFF !important;
+  }
+  .health_level_3{
+    background-color: #C6EFCE !important;
+  }
+  .health_level_4{
+    background-color: #FFEB9C !important;
+  }
+
+}
+
+#campaign-device-table {
+  &.dataTable tr.odd td {
+    background-color: #f3f4f5;
+  }
+}
+
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable tfoot th,
+table.dataTable tfoot td {
+  padding-left: 10px;
+}
+
+td.details-control {
+  background-image: image_url('details_open.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+}
+
+tr.shown td.details-control {
+  background-image: image_url('details_close.png');
+}

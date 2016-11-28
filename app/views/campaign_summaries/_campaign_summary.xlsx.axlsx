@@ -1,0 +1,86 @@
+table = {
+    title: [t('views.campaign_summaries.title', month: Time.now.strftime(Date::DATE_FORMATS[:month]))],
+    head: [t('models.campaign_summary.fields.duration'), nil, t('models.campaign_summary.fields.country_code'), t('models.campaign_summary.fields.agency'), t('models.campaign_summary.fields.campaign'), t('models.campaign_summary.fields.type'), t('models.campaign_summary.fields.budget'), t('models.campaign_summary.fields.target'), t('models.campaign_summary.fields.cpm'), t('models.campaign_summary.fields.views'), t('models.campaign_summary.fields.clicks'), t('models.campaign_summary.fields.delivery'), t('models.campaign_summary.fields.ctr'), t('models.campaign_summary.fields.spending'), t('models.campaign_summary.fields.spend_vs_budget'), t('models.campaign_summary.fields.ecpm'), t('models.campaign_summary.fields.ecpc')],
+    data: {
+        model: @monthly_campaign_summary,
+        columns: { active_at: :date, expire_at: :date, country_code: nil, agency_name: nil, name: nil, campaign_type: nil,
+                budget_as_money: :money, target: :number, unit_price_in_usd_as_money: :money, views: :number, clicks: :number,
+                delivery_realized: :percent, ctr: :percent, spend: :money_with_bold, spend_vs_budget: :percent, ecpm: :money, ecpc: :money },
+        values: {
+            delivery_realized: proc{|region, i, model|  "=#{region.x_by_column(model.CPM? ? :views : :clicks)}#{region.y_body_by_index(i)}/#{region.x_by_column(:target)}#{region.y_body_by_index(i)}"},
+            ctr: proc{|region, i|  "=#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}"},
+            spend_vs_budget: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:budget_as_money)}#{region.y_body_by_index(i)}"},
+            ecpm: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}*1000"},
+            ecpc: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}"}
+        }
+
+    },
+    border: true,
+    padding_bottom: 2,
+}
+
+region = @sheet_render.add_table table do |sheet, region|
+
+  total_row_data =[t('models.campaign_summary.total'), nil, nil , nil, nil , nil,
+                    "=SUM(#{region.range_by_column(:budget_as_money)})",
+                    "=SUM(#{region.range_by_column(:target)})",
+                    nil,
+                    "=SUM(#{region.range_by_column(:views)})",
+                    "=SUM(#{region.range_by_column(:clicks)})",
+                    nil ,
+                    "=#{region.x_by_column(:clicks)}#{region.y_end+1}/#{region.x_by_column(:views)}#{region.y_end+1}",
+                    "=SUM(#{region.range_by_column(:spend)})",
+                    nil ,nil, nil]
+
+  total_row_styles = [:head_with_border, :head, :head , :head, :head , :head, :head_money, :head_number,
+                      :head, :head_number, :head_number,  :head ,  :head_percent, :head , :head_money, :head, :head_with_border]
+
+  @sheet_render.add_row(total_row_data, total_row_styles)
+
+
+  red ='FFF8696B'
+  green = 'FF63BE7B'
+
+  delivery_realized_color_scale = Axlsx::ColorScale.new({:type => :min, :val => 0, :color => red},
+                                                        {:type => :percent, :val => '7', :color => 'FFFFEB84'},
+                                                        {:type => :max, :val => 0, :color => green})
+
+  sheet.add_conditional_formatting(region.range_by_column(:delivery_realized), { :type => :colorScale,
+                                                                                 :priority => 1,
+                                                                                 :color_scale => delivery_realized_color_scale })
+
+  ctr_color_scale = Axlsx::ColorScale.new({:type => :min, :val => 0, :color => red},
+                                          {:type => :percent, :val => '50', :color => 'FFFFEB84'},
+                                          {:type => :max, :val => 0, :color => green})
+
+  sheet.add_conditional_formatting(region.range_by_column(:ctr), { :type => :colorScale,
+                                                                   :priority => 1,
+                                                                   :color_scale => ctr_color_scale })
+
+  spend_vs_budget_color_scale = Axlsx::ColorScale.new({:type => :min, :val => 0, :color => green},
+                                          {:type => :percent, :val => '40', :color => 'FFFFEB84'},
+                                          {:type => :max, :val => 0, :color => red})
+
+  sheet.add_conditional_formatting(region.range_by_column(:spend_vs_budget), { :type => :colorScale,
+                                                                   :priority => 1,
+                                                                   :color_scale => spend_vs_budget_color_scale })
+
+  ecpm_color_scale = Axlsx::ColorScale.new({:type => :min, :val => 0, :color => green},
+                                                      {:type => :percent, :val => '60', :color => 'FFFFEB84'},
+                                                      {:type => :max, :val => 0, :color => red})
+
+  sheet.add_conditional_formatting(region.range_by_column(:ecpm), { :type => :colorScale,
+                                                                               :priority => 1,
+                                                                               :color_scale => ecpm_color_scale })
+  sheet.add_conditional_formatting(region.range_by_column(:ecpc), { :type => :colorScale,
+                                                                    :priority => 1,
+                                                                    :color_scale => ecpm_color_scale })
+
+  sheet.merge_cells region.range_at_row(2, 1, 2)
+  sheet.merge_cells region.range_at_row(region.y_end + 1, 1, 6)
+
+  region.h += 1
+end
+
+@sheet_render.add_row_at_position([t('views.campaign_summaries.description.spend_vs_budget')], :align_right_bold, region.right_bottom.x_as_index, region.right_bottom.y+1)
+@sheet_render.add_row_at_position([t('views.campaign_summaries.description.ecpm')], :align_right_bold, region.right_bottom.x_as_index, region.right_bottom.y+2)

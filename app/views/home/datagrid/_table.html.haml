@@ -1,0 +1,27 @@
+#toolbar.row
+  .col-lg-12.col-xs-12
+    - if options[:new_path]
+      = link_to icon_tag(:create) + content_tag(:span, I18n.t('datagrid.table.actions.add')).html_safe,
+                options[:new_path],
+                :class => 'btn btn-primary btn-sm text-white', :title => I18n.t('datagrid.table.actions.add')
+
+      = link_to icon_tag(:download) + content_tag(:span, I18n.t('datagrid.table.actions.executive_report')).html_safe,
+                executive_report_path(format: :pdf, date: Time.now.strftime(Date::DATE_FORMATS[:iso]) ),
+                :class => 'btn btn-success btn-sm text-white', :title => I18n.t('datagrid.table.actions.executive_report'), target: '_blank'
+
+      = link_to icon_tag(:download) + content_tag(:span, I18n.t('datagrid.table.actions.monthly_campaign_summary')).html_safe,
+                      monthly_campaign_summary_path,
+                      :class => 'btn btn-success btn-sm text-white', :title => I18n.t('datagrid.table.actions.monthly_campaign_summary')
+
+      - if options[:more_links]
+        - options[:more_links].each do |link|
+          = link
+= content_tag :table, options[:html] do
+  %thead
+    = datagrid_header(grid, options)
+  %tbody
+    - unless assets.any?
+      %tr
+        %td.noresults{:colspan => "100%"}= I18n.t('datagrid.no_results').html_safe
+  %tfoot
+    = datagrid_header(grid, options)

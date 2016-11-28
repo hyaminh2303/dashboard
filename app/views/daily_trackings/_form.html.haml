@@ -1,0 +1,49 @@
+/ /.box-header
+/ form start
+.row
+  .col.col-lg-8
+
+    .box.box-info{ng: @daily_tracking.new_record? ? { controller: 'DatepickerChangeController', init: "init('#daily_tracking_date', #{@daily_tracking.date.to_time.to_i * 1000}, '#{Date::DATE_FORMATS[:js_default]}', '#{new_campaign_daily_tracking_path}')" } : ''}
+
+      .box-header
+        %h3.box-title
+        = simple_form_for [@campaign, @daily_tracking], url: @daily_tracking.new_record? ? campaign_daily_trackings_path(date: date_to_iso_string(@date)) : campaign_daily_tracking_path(date: date_to_iso_string(@date)) do |f|
+          .box-body.form-inputs
+            = render :partial => '/shared/errors', locals: {model: @daily_tracking}
+            .row
+              .col-md-4
+                - if @daily_tracking.new_record?
+                  = f.input :date, as: :string, input_html: { value: @date.strftime(Date::DATE_FORMATS[:rails_datepicker_default]), data: { provide: 'datepicker'}, 'ng-model' => 'date', 'ng-blur' => 'onBlur($event)', 'ng-change' => "onChangeDate()", 'datepicker-directive' => '', 'datepicker-format' => Date::DATE_FORMATS[:js_datepicker_default], 'datepicker-start-time' => @campaign.active_at.to_time.to_i * 1000, 'datepicker-end-time' => @campaign.expire_at.to_time.to_i * 1000}
+                - else
+                  = f.input :date, as: :string, input_html: { disabled: 'disabled'}
+
+              %div{ class: @campaign.has_ads_group? ? 'col-md-4' : 'col-md-8'}
+                - if @daily_tracking.new_record?
+                  = f.association :platform, input_html: { :class => 'select2-static'}
+                - else
+                  = f.association :platform, input_html: { :disabled => ''}
+
+              - if @campaign.has_ads_group?
+                .col-md-4
+                  = f.association :campaign_ads_group, collection: CampaignAdsGroup.where(campaign_id: @campaign.id) {|group| [group.name, group.id]},  input_html: { :class => 'select2-static'}
+            .row
+              .col.col-md-4
+                = f.input :views
+              .col.col-md-4
+                = f.input :clicks
+              .col.col-md-4
+                = f.input :spend
+
+          .box-footer
+
+            - if @daily_tracking.new_record?
+              = f.button :submit, :value => t('views.form.add'), :class => 'btn btn-primary'
+              = link_to t('views.form.cancel'), root_path, :class => 'btn btn-default'
+
+              .pull-right
+                = link_to(icon_tag(:import) + content_tag(:span, 'Import').html_safe,
+                    import_campaign_daily_trackings_path,
+                    class: 'btn btn-success text-white')
+            - else
+              = f.button :submit, :value => t('views.form.update'), :class => 'btn btn-primary'
+              = link_to t('views.form.cancel'), new_campaign_daily_tracking_path(:date => @daily_tracking.date.strftime(Date::DATE_FORMATS[:iso])), :class => 'btn btn-default'

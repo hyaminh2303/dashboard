@@ -1,0 +1,153 @@
+= simple_form_for(@vast, url: vast_generator_path, wrapper: :bootstrap_with_error) do |f|
+  .box-loading
+    #accordion.box-body.form-inputs.box-group{ng: {controller: 'VastGeneratorController'}}
+      = render :partial => '/shared/errors', locals: {model: @vast}
+      - unless @vast.xml.blank?
+        .row
+          .col-md-12
+            //Output
+            .panel.box.box-solid.box-primary
+              .box-header
+                %h4.box-title
+                  %a{href: '#vast-content', data: {toggle: 'collapse'}}
+                    VAST content
+              #vast-content.panel-collapse.collapse.in
+                .box-body
+                  - if @vast.url.present?
+                    = f.input :url, label: 'URL'
+                  = f.input :xml, label: 'VAST content', as: :text, input_html: {rows: 20}
+                  - if @vast.url.blank?
+                    = hidden_field_tag :commit_to_s3, 0
+                    = button_tag 'Commit to S3', type: :submit, :class => 'btn btn-primary', 'ng-click' => 'commitToS3()'
+                  -else
+                    = link_to t('views.form.verify'), 'https://developers.google.com/interactive-media-ads/docs/vastinspector_dual', :class => 'btn btn-success', target: '_blank'
+      .row
+        .col-md-6
+          //Basic
+          .panel.box.box-solid.box-primary
+            .box-header
+              %h4.box-title
+                %a{href: '#basic'}
+                  Basic
+            #basic.panel-collapse.collapse.in
+              .box-body
+                = f.input :ad_system, placeholder: 'Yoose'
+                = f.input :ad_title, placeholder: 'Romano preroll video'
+                = f.input :description, as: :text
+                = f.simple_fields_for :error_urls do |c|
+                  = c.input :url, label: 'Error URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/errortracking/;campaign=oid270981777adid94672737;sz=1x1'
+                = f.simple_fields_for :impressions do |c|
+                  = c.input :url, label: 'Impression URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/NZ_Entertainment_MobGeo/;campaign=oid270981777adid94672737;sz=1x1'
+                = f.input :creative_type, as: :radio_buttons, collection: Hash[Vast::CREATIVE_TYPES.each.map {|v| [v, v.camelize]}], checked: @vast.creative_type, value_method: :first, label_method: :last, input_html: {class: 'flat-red'}, :wrapper_html => { :class => 'form-inline' }
+                = f.input :has_companion_ad, as: :boolean, input_html: {class: 'flat-red'}, inline_label: true, label: false
+          .row
+            .col-xs-7
+              = f.button :submit, 'Generate VAST',:class => 'btn btn-primary'
+              = link_to t('views.form.cancel'), vast_generator_path, :class => 'btn btn-default'
+            .col-xs-5
+              = f.input :file, as: :file, label: false, input_html: {class: 'btn-file-input btn-primary', title: 'Load from file ...'}
+          .row
+            .col-xs-12
+              = link_to t('views.vasts.index.verify_link'), 'https://developers.google.com/interactive-media-ads/docs/vastinspector_dual', target: '_blank'
+
+        .col-md-6
+          //Preroll Ad
+          .panel.box.box-solid.box-primary
+            .box-header
+              %h4.box-title
+                %a{href: '#preroll-ad', data: {toggle: 'collapse', parent: '#accordion'}}
+                  Preroll Ad
+            #preroll-ad.option-params.panel-collapse
+              .box-body
+                = f.simple_fields_for :linear_ads do |c|
+                  .row
+                    .col-xs-6
+                      = c.input :skipoffset, placeholder: '00:00:10 or 10%'
+                    .col-xs-6
+                      = c.input :duration, placeholder: '00:00:30'
+                  = c.simple_fields_for :media_files do |c2|
+                    = c2.input :media_type, collection: MediaFile::MEDIA_TYPES, include_blank: 'Choose media type', input_html: {class: 'select2-static'}
+                    .row
+                      .col-xs-8
+                        = c2.input :url, label: 'Media URL', placeholder: 'http://im-dev.s3.amazonaws.com/image_server/templates/campaign_16/video.mp4'
+                      .col-xs-4
+                        = c2.input :media, as: :file, label: 'Upload file', input_html: {class: 'btn-file-input'}
+                    .row
+                      .col-md-6
+                        = c2.input :width, as: :integer, placeholder: '800'
+                      .col-md-6
+                        = c2.input :height, as: :integer, placeholder: '600'
+                  = c.input :click_through, label: 'Click Through URL', placeholder: 'http://im.l.dev.s3-website-eu-west-1.amazonaws.com/16/index.html'
+                  = c.simple_fields_for :click_trackings do |c2|
+                    = c2.input :url, label: 'Click Tracking URL', placeholder: 'http://pubads.g.doubleclick.net/gampad/clk?id=94677177&iu=/3595/NZ_Entertainment_MobGeo'
+                  = c.simple_fields_for :tracking_events do |c2|
+                    = c2.input :event, collection: TrackingEvent::EVENTS, include_blank: 'Choose event type', input_html: {class: 'select2-static'}
+                    = c2.input :url, label: 'Tracking event URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/trackingevents/;campaign=oid270981777adid94672737;sz=1x1'
+          //Overlay Ad
+          .panel.box.box-solid.box-primary
+            .box-header
+              %h4.box-title
+                %a{href: '#overlay-ad', data: {toggle: 'collapse', parent: '#accordion'}}
+                  Overlay ad
+            #overlay-ad.option-params.panel-collapse.collapse{ class: "#{'in' if @vast.has_non_linear_ad? }"}
+              .box-body
+                = f.simple_fields_for :non_linear_ads do |c|
+                  = c.simple_fields_for :non_linear_resources do |c2|
+                    .row
+                      .col-md-6
+                        = c2.input :width, as: :integer, placeholder: '800'
+                      .col-md-6
+                        = c2.input :height, as: :integer, placeholder: '600'
+                    = c2.simple_fields_for :ad_resources do |c3|
+                      = c3.input :resource_type, collection: AdResource::RESOURCE_TYPES, as: :grouped_select,group_method: :last, include_blank: 'Choose resource type', input_html: {class: 'select2-static'}
+                      .row
+                        .col-xs-8
+                          = c3.input :url, label: 'Resource URL', placeholder: 'http://im-dev.s3.amazonaws.com/image_server/templates/campaign_16/video.mp4'
+                        .col-xs-4
+                          = c3.input :media, as: :file, label: 'Upload file', input_html: {class: 'btn-file-input'}
+                    = c2.input :click_through, label: 'Click Through URL', placeholder: 'http://im.l.dev.s3-website-eu-west-1.amazonaws.com/16/index.html'
+                    = c2.simple_fields_for :click_trackings do |c3|
+                      = c3.input :url, label: 'Click Tracking URL', placeholder: 'http://pubads.g.doubleclick.net/gampad/clk?id=94677177&iu=/3595/NZ_Entertainment_MobGeo'
+                  = c.simple_fields_for :tracking_events do |c2|
+                    = c2.input :event, collection: TrackingEvent::EVENTS, include_blank: 'Choose event type', input_html: {class: 'select2-static'}
+                    = c2.input :url, label: 'Tracking event URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/trackingevents/;campaign=oid270981777adid94672737;sz=1x1'
+          //Companion Ads
+          .panel.box.box-solid.box-primary
+            .box-header
+              %h4.box-title
+                %a{href: '#companion-ad', data: {toggle: 'collapse'}}
+                  Companion Ad
+            #companion-ad.option-params.panel-collapse.collapse{ class: "#{'in' if @vast.has_companion_ad? }"}
+              .box-body
+                = f.simple_fields_for :companion_ads do |c|
+                  .row
+                    .col-md-6
+                      = c.input :width, as: :integer, placeholder: '800'
+                    .col-md-6
+                      = c.input :height, as: :integer, placeholder: '600'
+                  = c.simple_fields_for :ad_resources do |c2|
+                    = c2.input :resource_type, collection: AdResource::RESOURCE_TYPES, as: :grouped_select,group_method: :last, include_blank: 'Choose resource type', input_html: {class: 'select2-static'}
+                    .row
+                      .col-md-8
+                        = c2.input :url, label: 'Resource URL', placeholder: 'http://im-dev.s3.amazonaws.com/image_server/templates/campaign_16/video.mp4'
+                      .col-md-4
+                        = c2.input :media, as: :file, label: 'Upload File', input_html: {class: 'btn-file-input'}
+                  = c.input :click_through, label: 'Click Through URL', placeholder: 'http://im.l.dev.s3-website-eu-west-1.amazonaws.com/16/index.html'
+                  = c.simple_fields_for :click_trackings do |c2|
+                    = c2.input :url, label: 'Click Tracking URL', placeholder: 'http://pubads.g.doubleclick.net/gampad/clk?id=94677177&iu=/3595/NZ_Entertainment_MobGeo'
+                  = c.simple_fields_for :tracking_events do |c2|
+                    = c2.input :event, collection: TrackingEvent::EVENTS, include_blank: 'Choose event type', input_html: {class: 'select2-static'}
+                    = c2.input :url, label: 'Tracking event URL', placeholder: 'http://ad.doubleclick.net/N3595/ad/trackingevents/;campaign=oid270981777adid94672737;sz=1x1'
+    .overlay.loading.hidden_only
+    .loading-img.loading.progressing.hidden_only
+
+%script
+  - if @vast.has_linear_ad? || !@vast.has_ad?
+    $('#preroll-ad').collapse('show')
+  - elsif !@vast.has_linear_ad? && @vast.has_non_linear_ad?
+    $('#preroll-ad .form-control').prop('disabled', true).parents('.panel').hide()
+  - if !@vast.has_companion_ad?
+    $('#companion-ad .form-control').prop('disabled', true).parents('.panel').hide()
+  - if !@vast.has_non_linear_ad?
+    $('#overlay-ad .form-control').prop('disabled', true).parents('.panel').hide()
+

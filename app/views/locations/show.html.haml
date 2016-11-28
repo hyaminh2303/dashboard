@@ -1,0 +1,39 @@
+- breadcrumb :location, @location
+- content_for :header do
+  = t('views.locations.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title= t('views.locations.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_location_path(@location), :class => 'btn btn-info btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.location.fields.name')
+          %dd= @location.name
+          %dt= t('models.location.fields.address')
+          %dd= @location.address
+          %dt= t('models.location.fields.location_lists')
+          %dd= @location.location_lists.map {|m| m.name}.join(", ")
+          %dt= t('models.location.fields.zip_code')
+          %dd= @location.zip_code
+          %dt= t('models.location.fields.country_code')
+          %dd= @location.country_code
+          %dt= t('models.location.fields.longitude')
+          %dd= @location.longitude
+          %dt= t('models.location.fields.latitude')
+          %dd= @location.latitude
+          %dt= t('models.location.fields.status')
+          - if @location.status==Location::STATUS_PUBLISHED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-checkmark-circled').html_safe, "",:class => 'text-green', :title => t('statuses.published')
+          - elsif @location.status==Location::STATUS_EXPIRED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-close-circled').html_safe, "",:class => 'text-red', :title => t('statuses.expired')
+          - else
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-help-circled').html_safe, "",:class => 'text-blue', :title => t('statuses.pending')
+      / /.box-body
+    / /.box

@@ -1,0 +1,19 @@
+- breadcrumb :currency, @currency
+- content_for :header do
+  = t('views.currencies.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.currencies.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_currency_path(@currency), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.currency.fields.name')
+          %dd= @currency.name
+          %dt= t('models.currency.fields.code')
+          %dd= @currency.code
+      / /.box-body
+    / /.box

@@ -1,0 +1,29 @@
+- breadcrumb :publisher, @publisher
+- content_for :header do
+  = t('views.publishers.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.publishers.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_publisher_path(@publisher), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.publisher.fields.name')
+          %dd= @publisher.name
+          %dt= t('models.publisher.fields.email')
+          %dd= @publisher.email
+          %dt= t('models.publisher.fields.status')
+          - if @publisher.status==Publisher::STATUS_PUBLISHED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-checkmark-circled').html_safe, "",:class => 'text-green', :title => t('statuses.published')
+          - elsif @publisher.status==Publisher::STATUS_EXPIRED
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-close-circled').html_safe, "",:class => 'text-red', :title => t('statuses.expired')
+          - else
+            %dd
+              = link_to content_tag('i', '', :class => 'ion-help-circled').html_safe, "",:class => 'text-blue', :title => t('statuses.pending')
+      / /.box-body
+    / /.box

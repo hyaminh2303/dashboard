@@ -1,0 +1,22 @@
+= simple_form_for(@sale_manager) do |f|
+  = render :partial => '/shared/errors', locals: {model: @sale_manager}
+  .box.box-solid.box-info
+    .box-header
+      %h3.box-title
+        %a{href: '#options', data: {toggle: 'collapse'}}
+          Primary Informations
+    #options.panel-collapse.collapse.in
+      .box-body.form-inputs
+        .row
+          .col.col-md-6
+            = f.input :name
+          .col.col-md-6
+            = f.input :phone
+        .row
+          .col.col-md-6
+            = f.input :address
+          .col.col-md-6
+            = f.input :email
+
+  = f.button :submit, :class => 'btn btn-primary'
+  = link_to t('views.form.cancel'), sale_managers_path, :class => 'btn btn-default'

@@ -1,0 +1,21 @@
+// Place all the styles related to the orders controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/*
+ *= require style
+ *= require angular-datepicker
+ */
+
+.box-dashboard{
+  table.table{
+    tbody{
+      tr:first-child{
+        font-weight: normal;  
+      }
+    }
+  }
+  .search-orders-form{
+    padding-bottom: 20px;
+  }
+}

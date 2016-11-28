@@ -1,0 +1,11 @@
+= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'),
+          edit_campaign_app_tracking_path(model.campaign, model),
+          method: :get,
+          :class => 'btn btn-warning btn-xs',
+          :title => t('datagrid.table.actions.edit')
+= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-remove'),
+          campaign_app_tracking_path(model.campaign, model, date: @date.strftime(Date::DATE_FORMATS[:iso])),
+          method: :delete,
+          data: {confirm: I18n.t('messages.destroy.confirmation', :model_name => I18n.t('models.app_tracking.name'), :name => model.name)},
+          :class => 'btn btn-danger btn-xs',
+          :title => t('datagrid.table.actions.delete')

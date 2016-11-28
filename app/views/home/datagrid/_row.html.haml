@@ -1,0 +1,3 @@
+%tr{:class => options[:cycle] && cycle(*options[:cycle]), ng: {click: "loadRow(#{asset.id.present? ? asset.id : 0 }, '#{asset.has_attribute?(:name) ? asset.name : 'Total' }', '#{number_with_delimiter(asset.views)}', '#{number_with_delimiter(asset.clicks)}', '#{asset.budget_spent.format}')"}}
+  - grid.html_columns(*options[:columns]).each do |column|
+    %td{:class => datagrid_column_classes(grid, column)}= datagrid_format_value(grid, column, asset)

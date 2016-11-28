@@ -1,0 +1,7 @@
+- breadcrumb :currencies
+- content_for :header do
+  = t('views.currencies.index.table_header')
+
+= datagrid_form_for @grid, :as => :currencies_grid, :url => currencies_path
+
+= datagrid_table @grid, :new_path => new_currency_path, :html => {:class => 'table table-bordered table-hover'}

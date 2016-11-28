@@ -1,0 +1,13 @@
+- total_count = assets.total_count
+.row
+  .col-xs-6
+    .dataTables_info
+      - if assets.count > 0
+        Showing #{(assets.current_page - 1) * assets.limit_value + 1}
+        to #{assets.current_page * assets.limit_value > total_count ? total_count : assets.current_page * assets.limit_value}
+        of #{total_count} entries
+      - else
+        There is no record.
+  .col-xs-6
+    .dataTables_paginate.paging_bootstrap
+      = paginate assets

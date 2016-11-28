@@ -1,0 +1,14 @@
+/ /.box-header
+/ form start
+.box.box-info
+  .box-header
+    %h3.box-title
+    = simple_form_for [@campaign, @creative_tracking], url: @creative_tracking.new_record? ? campaign_creative_trackings_path(date: date_to_iso_string(@date)) : campaign_creative_tracking_path(date: date_to_iso_string(@date)) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @creative_tracking}
+        = f.input :name
+        = f.input :impressions
+        = f.input :clicks
+        = f.input :unit_price
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to 'Cancel', campaign_creative_trackings_path(date: date_to_iso_string(@date)), :class => 'btn btn-default'

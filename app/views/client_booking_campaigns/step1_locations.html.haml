@@ -1,0 +1,38 @@
+.locations-modal
+  .modal-header
+    %h3#modal-title.modal-title Add Location
+  #modal-body.modal-body
+    .row
+      .col-md-6
+        %form
+          .row
+            .col-md-10
+              %input.form-control{type: 'text', placeholder: 'Enter place', ng: {model: 'q'}}
+            .col-md-2
+              .btn.btn-primary{ng: {click: 'searchLocation()'}} Search
+        .search-result
+          .location-item{"ng-repeat" => "result in validLocations()"}
+            .col-xs-12.col-sm-9.col-md-9
+              .list-group
+                .list-group-item
+                  .row-picture
+                    %a{:href => "#", :title => "{{result.title}}"}
+                      %img.circle.img-thumbnail.img-box{:alt => "sintret", :src => "http://sintret.com/img/andy.jpg"}/
+                  .row-content
+                    .list-group-item-heading
+                      %a{:href => "#", :title => "{{result.title}}"}
+                        %small {{result.title}}
+                    %small
+                      %i.glyphicon.glyphicon-time
+                      {{result.vicinity}}
+                      %br/
+                      %span.explore
+                        %i.glyphicon.glyphicon-th
+                        {{result.category}}
+            .clearfix
+            %hr/
+      .col-md-6
+        %leaflet#map{:center => "center", :defaults => "defaults", "event-broadcast" => "events", :markers => "markers", :circles => 'circles'}
+  .modal-footer
+    %button.btn.btn-primary{"ng-click" => "ok()", :type => "button"} OK
+    %button.btn.btn-warning{"ng-click" => "cancel()", :type => "button"} Cancel

@@ -1,0 +1,210 @@
+!!!
+%html
+  %head
+    %meta{"http-equiv"=>"content-type", :content=>"text/html; charset=utf-8"}
+    = wicked_pdf_stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css"
+    = wicked_pdf_stylesheet_link_tag "pdf", media: "print"
+  %body{onload: 'number_pages'}
+    .container.pdf-contain.text-size
+      .row
+        .col-xs-7
+          .logo-io
+            = wicked_pdf_image_tag OrderSetting.logo
+          %br
+          %br
+          %h7.slogan-io
+            = OrderSetting.slogan
+          .address-io
+            = raw OrderSetting.address
+          %h7.subtit Sales Contact
+          %table.table-io
+            %tbody
+              %tr
+                %td.col-md-6
+                  %strong Name
+                %td
+                  = @order.sale_manager.name
+              %tr
+                %td.col-md-6
+                  %strong Phone
+                %td
+                  = @order.sale_manager.phone
+              %tr
+                %td.col-md-6
+                  %strong Email
+                %td
+                  = @order.sale_manager.email
+              %tr
+                %td.col-md-6
+                  %strong Address
+                %td
+                  = @order.sale_manager.address
+          %br
+        .col-xs-5
+          %h5.title INSERTION ORDER
+          %h7.subtit
+            = io_number(@order.id)
+          %br
+          %br
+          %table.table-io.table-insertion
+            %tbody
+              %tr
+                %td.col-md-6
+                  %strong Date
+                %td
+                  = @order.date
+              %tr
+                %td.col-md-6
+                  %strong Agency Name
+                %td
+                  = @order.agency.name
+              %tr
+                %td.col-md-6
+                  %strong Advertiser Name
+                %td
+                  = @order.advertiser_name
+              %tr
+                %td.col-md-6
+                  %strong Campaign Name
+                %td
+                  = @order.campaign_name
+              %tr
+                %td.col-md-6
+                  %strong Billing Currency
+                %td
+                  = @order.currency.name
+          %h7.subtit Invoice Information
+          %table.table-io.table-insertion
+            %tbody
+              %tr
+                %td.col-md-6
+                  %strong Company
+                %td
+                  = @order.agency.billing_name
+              %tr
+                %td.col-md-6
+                  %strong Phone
+                %td
+                  = @order.agency.billing_phone
+              %tr
+                %td.col-md-6
+                  %strong Email
+                %td
+                  = @order.agency.billing_email
+              %tr
+                %td.col-md-6
+                  %strong Address
+                %td
+                  = @order.agency.billing_address
+          %h7.subtit Contact Information
+          %table.table-io.table-insertion
+            %tbody
+              %tr
+                %td.col-md-6
+                  %strong Name
+                %td
+                  = @order.agency.contact_name
+              %tr
+                %td.col-md-6
+                  %strong Phone
+                %td
+                  = @order.agency.contact_phone
+              %tr
+                %td.col-md-6
+                  %strong Email
+                %td
+                  = @order.agency.contact_email
+              %tr
+                %td.col-md-6
+                  %strong Address
+                %td
+                  = @order.agency.contact_address
+      .row
+        .col-xs-12
+          %h7.subtit Booking Order Information
+          %table.table-io.booking-info.table-bordered{:style => "width:100%"}
+            %tr
+              %th Country
+              %th AD Format
+              %th Size
+              %th Placement
+              %th Start Date
+              %th End Date
+              %th Rate Type
+              %th Booked Inventory
+              %th Unit Cost
+              %th Total Buget
+            - @order.order_items.each do |i|
+              %tr
+                %td
+                  = i.country
+                %td
+                  = i.ad_format
+                %td
+                  = i.banner_size
+                %td
+                  = i.placement
+                %td
+                  = i.start_time
+                %td
+                  = i.end_time
+                %td
+                  = i.rate_type.upcase
+                %td.text-right
+                  = i.get_target_clicks_or_impressions
+                %td.text-right
+                  = i.formatted_money
+                %td.text-right
+                  = i.get_total_budget
+            %tr
+              %td{:colspan => "9"}
+              %td.text-right
+                %strong
+                  = @order.get_total_budget
+      .row
+        %br
+        .col-xs-7
+          - if @order.additional_information.present?
+            %h7.subtit Addition Information (e.g targeting and locations)
+            .addition-info
+              = raw @order.additional_information.gsub(/\n/, '<br/>')
+        .col-xs-5
+          %h7.subtit SubTotal
+          %table.table-bordered{:style => "width:100%"}
+            %tbody
+              - @order.sub_totals.each do |st|
+                %tr
+                  %td.text-right{:style => "width:50%"}
+                    = st.sub_total_setting.name
+                  %td.text-right{:style => "width:20%"}
+                    - if st.sub_total_type == "percent"
+                      = st.value
+                      &#37;
+                  %td.text-right{:style => "width:30%"}
+                    = st.get_budget
+              %tr
+                %td.text-right{:style => "width:50%"}
+                  %strong Net Budget
+                %td.text-right{:style => "width:20%"}
+                %td.text-right{:style => "width:30%"}
+                  %strong
+                    = @order.get_total_subtotal
+      .row.terms-conditions
+        = raw OrderSetting.terms_and_conditions
+      %h7.subtit Authorization
+      .row.author-io
+        = raw @order.authorization
+      .page-break
+      .row.amendment
+        = raw OrderSetting.amendment
+:javascript
+  function number_pages() {
+    var vars={};
+    var x=document.location.search.substring(1).split('&');
+    for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = decodeURIComponent(z[1]);}
+    var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+    for(var i in x) {
+      var y = document.getElementsByClassName(x[i]);
+      for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+    }
+  }

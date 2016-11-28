@@ -1,0 +1,6 @@
+- if defined? status
+  = status
+.pull-left
+  %div= values.first
+  - if values.second && (can?(:manage, Campaign) || agency_can_see_detail_campaign?(current_user))
+    %small{data: {toggle: 'tooltip', placement: 'right', :'original-title' => "#{title}"}}= values.last

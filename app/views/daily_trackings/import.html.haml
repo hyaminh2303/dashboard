@@ -1,0 +1,34 @@
+- breadcrumb :daily_trackings_import
+- content_for :header do
+  = @campaign.name
+
+/ form start
+.box.box-info{ng: { controller: 'ImportController', init: 'init()'}}
+  = simple_form_for [ :daily_trackings, DailyTracking.new], url: import_campaign_daily_trackings_path, enctype: 'multipart/form-data' do |f|
+    .box-body.form-inputs
+
+      - if @notice
+        .alert.alert-success.alert-dismissable
+          %i.fa.fa-check
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+          = @notice
+
+      = render partial: 'errors', locals: { error_messages: @error_messages}
+
+      .form-group
+        .row
+          .col.col-md-4
+            = f.association :platform, selected: 0, input_html: { :class => 'select2-static'}
+            .row
+              .col.col-md-6
+                = f.input :override, as: :boolean, label: 'Override?', input_html: { class: 'flat-red'}
+              .col.col-md-6
+                = f.input :sum, as: :boolean, label: 'Sum Up?', input_html: { class: 'flat-red', checked: 'checked'}
+        = f.label :file
+        = f.file_field :file, multiple: true
+    .box-footer
+      = f.button :submit, :value => t('views.form.import'), :class => 'btn btn-primary', 'ng-click' => 'onImportClick($event)'
+      = link_to t('views.form.cancel'), new_campaign_daily_tracking_path, class: 'btn btn-default'
+
+      %div.error-details
+        = render partial: 'errors', locals: { error_messages: @error_details}

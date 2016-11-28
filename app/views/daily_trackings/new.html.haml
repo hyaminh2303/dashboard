@@ -1,0 +1,9 @@
+- breadcrumb :daily_tracking, @campaign
+- content_for :header do
+  = link_to @campaign.name, campaign_path(@campaign)
+
+= render partial: 'errors', locals: { error_messages: flash[:error_messages] }
+
+= render 'form'
+
+= datagrid_table @grid, :html => {:class => 'table table-bordered table-hover'}

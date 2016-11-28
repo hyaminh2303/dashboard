@@ -1,0 +1,7 @@
+- breadcrumb :daily_trackings
+- content_for :header do
+  = t('views.daily_trackings.index.table_header')
+
+= datagrid_form_for @grid, :as => :daily_trackings_grid, :url => daily_trackings_path
+
+= datagrid_table @grid, :new_path => new_daily_tracking_path, :html => {:class => 'table table-bordered table-hover'}

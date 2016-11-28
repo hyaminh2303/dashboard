@@ -1,0 +1,162 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: t('views.orders.report')) do |sheet|
+  #### region styles
+  styles = wb.styles
+  big_title = styles.add_style b: true, fg_color: 'F79646', sz: 18, font_name: default_font_name
+
+  title = styles.add_style fg_color: 'FF', :alignment => { :horizontal => :center, wrap_text: true }, font_name: default_font_name
+
+  title_table = styles.add_style b: true, bg_color: 'd32f2f', fg_color: 'FF', :alignment => { :horizontal => :center, wrap_text: true }, border: { style: :thin, color: '010101' }, font_name: default_font_name
+
+  slogan_style = styles.add_style fg_color: 'FF0000', b: true, alignment: { wrap_text: true }, font_name: default_font_name
+
+  text_bold = styles.add_style b: true, alignment: { wrap_text: true }, font_name: default_font_name
+
+  text_bold_orange = styles.add_style b: true, fg_color: 'F79646', alignment: { wrap_text: true }, font_name: default_font_name
+
+  text_align_top = styles.add_style alignment: { vertical: :top, wrap_text: true }, font_name: default_font_name
+
+  border = styles.add_style border: { style: :thin, color: '010101' }, alignment: { wrap_text: true , vertical: :top}, font_name: default_font_name
+
+  text_bold_border = styles.add_style b: true, border: { style: :thin, color: '010101' }, alignment: { wrap_text: true }, font_name: default_font_name
+
+  default_font = styles.add_style font_name: default_font_name
+
+  #### end region styles
+
+  #### region order information
+  (1..6).each do 
+    sheet.add_row [], style: default_font
+  end
+
+  img = File.expand_path([Rails.root, 'public', OrderSetting.logo].join('/'), __FILE__)
+  sheet.add_image(:image_src => img, :noSelect => true, :noMove => true) do |image|
+    image.width=150
+    image.height=60
+    image.start_at 1, 3
+  end
+
+  sheet.add_row [nil, OrderSetting.slogan, nil, nil, nil, nil, nil, nil, 'INSERTION ORDER'], style: [nil, slogan_style, nil, nil, nil, nil, nil, nil, big_title]
+  sheet.merge_cells "B7:G7"
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'IO NO.:'], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold_orange]
+
+  sheet.add_row []
+
+  sheet.add_row [nil, 'Singapore (Yoose Headquarter)', nil, nil, nil, nil, nil, nil, 'Date', @order.date], style: [nil, text_bold, nil, nil, nil, nil, nil, nil, text_bold]
+
+  sheet.add_row [nil, '30A Duxton Road, Singapore 089494', nil, nil, nil, nil, nil, nil, 'Agency Name', @order.agency.name], style: [nil, default_font, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, 'Germany', nil, nil, nil, nil, nil, nil, 'Advertiser Name', @order.advertiser_name], style: [nil, text_bold, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, 'Friedrichstrasse 171, 10117 Berlin', nil, nil, nil, nil, nil, nil, 'Campaign Name', @order.campaign_name], style: [nil, default_font, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, 'India', nil, nil, nil, nil, nil, nil, 'Billing Currency', @order.currency.name], style: [nil, text_bold, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, '3rd Flr, N-116, Panchsheel Park, New Delhi 110017'], style: default_font
+
+  sheet.add_row [nil, 'USA'], style: [nil, text_bold]
+
+  sheet.add_row [nil, '116 W 23rd Street, 5th floor, New York', nil, nil, nil, nil, nil, nil, 'Billing Information'], style: [nil, default_font, nil, nil, nil, nil, nil, nil, text_bold_orange]
+
+  (10..17).each do |i|
+    sheet.merge_cells "B#{i}:E#{i}"
+  end
+  [7, 8, 17, 23].each do |i|
+    sheet.merge_cells "I#{i}:J#{i}"
+  end
+
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'Name', @order.agency.billing_name], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'Phone', @order.agency.billing_phone], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'Email', @order.agency.billing_email], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'Address', @order.agency.billing_address], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row []
+
+  sheet.add_row [nil, 'Sale Information', nil, nil, nil, nil, nil, nil, 'Contact Information'], style: [nil, text_bold_orange, nil, nil, nil, nil, nil, nil, text_bold_orange]
+  sheet.merge_cells "B23:D23"
+
+  sheet.add_row [nil, 'Name', @order.sale_manager.name, nil, nil, nil, nil, nil, 'Name', @order.agency.contact_name], style: [nil, text_bold, default_font, nil, nil, nil, nil, nil, text_bold, default_font]
+
+  sheet.add_row [nil, 'Phone', @order.sale_manager.phone, nil, nil, nil, nil, nil, 'Phone', @order.agency.contact_phone], style: [nil, text_bold, default_font, nil, nil, nil, nil, nil, text_bold, default_font]
+  
+  sheet.add_row [nil, 'Address', @order.sale_manager.address, nil, nil, nil, nil, nil, 'Address', @order.agency.contact_address], style: [nil, text_bold, default_font, nil, nil, nil, nil, nil, text_bold, default_font]
+  
+  sheet.add_row [nil, 'Email', @order.sale_manager.email, nil, nil, nil, nil, nil, 'Email', @order.agency.contact_email], style: [nil, text_bold, default_font, nil, nil, nil, nil, nil, text_bold, default_font]
+  
+  sheet.add_row []
+  sheet.add_row []
+
+  #### region order information
+
+  #### region Booking Order Information
+  sheet.add_row [nil, 'Booking Order Information'], style: [nil, text_bold_orange]
+  sheet.merge_cells "B30:D30"
+  sheet.add_row [nil, 'Country', 'AD Format', 'Size', 'Placement', 'Start Date', 'End Date', 'Rate Type', 'Target', 'Unit Cost', 'Total Budget'], style: [nil, title_table, title_table, title_table, title_table, title_table, title_table, title_table, title_table, title_table, title_table, title_table], widths: [:ignore] * 10
+
+  @order.order_items.each do |order_item|
+    row = [nil, order_item.country, order_item.ad_format, order_item.banner_size, order_item.placement, order_item.start_time, order_item.end_time, order_item.rate_type.upcase, order_item.target_clicks_or_impressions, order_item.formatted_money, order_item.get_total_budget]
+
+    sheet.add_row row, style: [nil, border, border, border, border, border, border, border, border, border, border]
+  end
+
+  sheet.add_row []
+  sheet.add_row []
+  #### end region Booking Order Information
+
+  #### region Additional Information and sub total
+  sheet.add_row [nil, 'Additional Information (e.g. targeting and locations)', nil, nil, nil, nil, nil, nil, 'SubTotal'], style: [nil, text_bold_orange, nil, nil, nil, nil, nil, nil, text_bold_orange]
+  additional_information_row = get_row_number('additional_information', @order)
+  sheet.merge_cells "B#{additional_information_row}:G#{additional_information_row}"
+
+  sheet.add_row [nil, @order.additional_information, nil, nil, nil, nil, nil, nil, 'Gross Budget', nil, @order.get_total_budget], style: [nil, text_align_top, nil, nil, nil, nil, nil, nil, text_bold_border, text_bold_border, text_bold_border]
+  sheet.merge_cells "B#{additional_information_row + 1}:G#{additional_information_row + 9}"
+
+  @order.sub_totals.each do |sub_total|
+    sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, sub_total.sub_total_setting.name, sub_total.percent? ? "#{sub_total.value}%": nil, sub_total.get_budget], style: [nil, nil, nil, nil, nil, nil, nil, nil, border, border, border]
+  end
+
+  sheet.add_row [nil, nil, nil, nil, nil, nil, nil, nil, 'Net Budget', nil, @order.get_total_subtotal], style: [nil, nil, nil, nil, nil, nil, nil, nil, text_bold_border, text_bold_border, text_bold_border]
+
+  (9-(@order.sub_totals.size+2)).times.each do
+    sheet.add_row []
+  end
+
+  #### end region Additional Information and sub total
+  sheet.add_row []
+  sheet.add_row []
+  sheet.add_row [nil, 'Term and Conditions'], style: [nil, text_bold_orange]
+  term_and_conditions = get_row_number('term_and_conditions', @order)
+  sheet.merge_cells "B#{term_and_conditions}:D#{term_and_conditions}"
+
+  #### region term and conditions
+  sheet.add_row [nil, "Terms of Payment: \n 1. 50% pre-payment is required prior to launch of campaign. \n 2. Invoice for balance 50% payment must be paid within 15 days from date of invioice. An interest of 3% per day will be applied on all late payments. \n 3. Budget must be paid in full as per invoiced, excluding any taxes. \n 4. All Fee payments hereunder shall be in US Dollars. Payments based on sales in currencies other than US Dollars shall be converted to US Dollars according to the official rate of exchange for that currency, as published on xe.com for the average exchange rate for day 1 of the calendar month. YOOSE will send a billing invoice dated on the 1st of each calendar month for the campaign budget used the previous month following the monthly currency exchange rate. \n Campaign Conditions \n\n All commercially reasonable efforts will be used to satisfy campaign conditions as stated within this IO. Client and YOOSE Pte. Ltd. agree that this IO can be terminated within 48hr after the mandatory activity period of five (5) operational days for campaigns with duration of seven (7) days or more. \n\n Ad Content Conditions \n\n Content is subject to approval and must comply with our terms of service and policies. YOOSE Pte. Ltd. reserves the right to not publish any Ad Content that is not in accordance with its terms of service and policies. \n\n Each of the undersigned agrees to the campaign details as identified in this IO effective as of the last date signed below. Each person who signs below represents that he/she is duly authorized to sign on behalf of the undersigned. \n\n\n With exception to the specific terms and agreements listed above, this Insertion Order shall be governed by the IAB/AAAA's STANDARD TERMS AND CONDITIONS FOR INTERNET ADVERTISING FOR MEDIA BUYS ONE YEAR OR LESS."], style: [nil, text_align_top]
+  (2..12).each do 
+    sheet.add_row []
+  end
+  sheet.merge_cells "B#{term_and_conditions + 1}:k#{term_and_conditions + 12}"
+
+  #### end region term and conditions
+  sheet.add_row []
+  sheet.add_row []
+  sheet.add_row [nil, 'Authorization'], style: [nil, text_bold_orange]
+  term_and_conditions = get_row_number('authorization', @order)
+  sheet.merge_cells "B#{term_and_conditions}:D#{term_and_conditions}"
+
+  sheet.add_row [nil, 'Please review and sign this order.'], style: default_font
+  sheet.merge_cells "B#{term_and_conditions + 1}:D#{term_and_conditions + 1}"
+  
+  sheet.add_row [nil, 'Name:', nil, nil, nil, nil, nil, nil, 'Signature:', nil, nil], style: [nil, border, border, border, border, border, border, border, border, border, border]
+  sheet.merge_cells "B#{term_and_conditions + 2}:H#{term_and_conditions + 2}"
+  sheet.merge_cells "I#{term_and_conditions + 2}:K#{term_and_conditions + 2}"
+
+  sheet.merge_cells "B#{term_and_conditions + 3}:H#{term_and_conditions + 3}"
+  sheet.merge_cells "I#{term_and_conditions + 3}:K#{term_and_conditions + 3}"
+  sheet.add_row [nil, 'Position:', nil, nil, nil, nil, nil, nil, 'Date:', nil, nil], style: [nil, border, border, border, border, border, border, border, border, border, border]
+  sheet.column_widths *([12]*sheet.column_info.count)
+  sheet.column_widths nil, nil, nil, nil, nil, nil, nil, nil, 20
+end  

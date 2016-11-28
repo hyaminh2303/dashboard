@@ -1,0 +1,22 @@
+.btn-group.pull-right{ng: {show: "row.id"}}
+  %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+    %span.glyphicon.glyphicon-cog
+    %span.sr-only Toggle Dropdown
+  %ul.dropdown-menu{:role => "menu"}
+    %li
+      %a{ng: {href: 'orders/{{row.id}}/edit'}, :title => "Edit"}
+        %i.glyphicon.glyphicon-edit>
+        Edit
+    %li
+      %a{:href => "javascript:void(0)", :title => "Delete", ng: { click: "remove(row)" }}
+        %i.glyphicon.glyphicon-trash>
+        Delete
+    %li
+      %a{ng: {href: 'orders/{{row.id}}/export_io.pdf'}, :title => "Export to PDF", target: :_blank}
+        %i.glyphicon.glyphicon-print>
+        Export to PDF
+    %li
+      %a{ng: {href: 'orders/{{row.id}}/export_io.xlsx'}, :title => "Export Excel"}
+        %i.glyphicon.glyphicon-export>
+        Export Excel
+    

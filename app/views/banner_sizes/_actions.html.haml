@@ -1,0 +1,3 @@
+- paths = { :show_path => banner_size_path(model), :edit_path => edit_banner_size_path(model), delete_path: banner_size_path(model) }
+
+= render :partial => 'shared/actions', :locals => { :paths => paths }

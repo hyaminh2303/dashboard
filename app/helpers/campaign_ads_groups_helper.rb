@@ -1,0 +1,2 @@
+module CampaignAdsGroupsHelper
+end

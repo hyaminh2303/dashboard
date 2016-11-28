@@ -1,0 +1,6 @@
+- if model.enabled?
+  = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-envelope'), send_invitation_agency_path(model), method: :post, data: {confirm: t('models.agency.messages.send_invitation.confirmation')}, :class => 'btn btn-success btn-xs', :title => t('models.agency.actions.send_invitation')
+= render :partial => 'shared/actions',
+  :locals => {confirmation: t('messages.destroy.confirmation', model_name: model.class.name, name: model.name), :paths => { :show_path => agency_path(model), :edit_path => edit_agency_path(model), :delete_path => agency_path(model) } }
+- if model.enabled?
+  = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-user'), reset_password_agency_path(model), method: :post, data: {confirm: t('models.agency.messages.reset_password.confirmation', email: model.email)}, :class => 'btn btn-danger btn-xs', :title => t('models.agency.actions.reset_password')

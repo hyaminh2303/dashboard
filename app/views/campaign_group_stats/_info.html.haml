@@ -1,0 +1,73 @@
+%table.table.table-bordered.table-striped{ ng: { controller: 'PopoverController', init: "init('#show_exchange_rate')"}}
+  %thead
+    -# ADMIN ONLY
+    - if can? :manage, Campaign
+      %tr
+        %th= t('views.campaign_details.fields.agency_name')
+        %th= model.agency.name
+    %tr
+      %th= t('views.campaign_details.fields.advertiser')
+      %th= model.advertiser_name
+  %tbody
+    - if (can? :manage, Campaign) || (agency_can_see_detail_campaign?(current_user))
+      %tr
+        %td= t('views.campaign_details.fields.total_budget')
+        %td
+          = model.total_budget_as_money.format
+          - unless model.development_fee?
+            - if model.discount?
+              = "(-#{model.discount.round(2)}% discount)"
+          .pull-right
+            = link_to content_tag(:span, '', class: 'glyphicon glyphicon-usd'), '', id: 'show_exchange_rate', class: 'btn btn-success btn-xs', data: { content: t('views.campaign_details.exchange_rate.message', currency: model.unit_price_currency, rate: get_exchange_rate(model))}
+    - if model.development_fee?
+      %tr
+        %td= t('views.campaign_details.fields.media_budget')
+        %td
+          = model.media_budget_as_money.format
+          - if model.discount?
+            = "(-#{model.discount.round(2)}% discount)"
+      %tr
+        %td= t('views.campaign_details.fields.development_fee')
+        %td= model.development_fee_as_money.format
+    %tr
+      %td= t('views.campaign_details.fields.type')
+      %td= model.campaign_type
+    %tr
+      %td= t('views.campaign_details.fields.target')
+      %td= (number_with_delimiter model.target) + (model.bonus_impression? ? " (#{ number_with_delimiter model.bonus_impression} bonus)" : "")
+    - if (can? :manage, Campaign) || (agency_can_see_detail_campaign?(current_user))
+      %tr
+        %td= t('views.campaign_details.fields.unit_price')
+        %td= Money.new(model.unit_price_in_usd).format
+    %tr
+      %td= t('views.campaign_details.fields.start_date')
+      %td= model.active_at
+    %tr
+      %td= t('views.campaign_details.fields.end_date')
+      %td= model.expire_at
+    %tr
+      %td= t('views.campaign_details.fields.country')
+      %td= Country.new(model.country_code).to_s
+    - if (can? :manage, Campaign)
+      %tr
+        %td= t('views.campaign_details.fields.category')
+        %td= Category.find(model.category_id).name
+    %tr
+      %td= t('views.campaign_details.fields.location')
+      %td= model.has_location_breakdown? ? 'Yes' : 'No'
+    - if can? :manage, Campaign
+      %tr
+        %td= t('views.campaign_details.fields.sales_agency_commission')
+        %td= model.sales_agency_commission
+      %tr
+        %td= t('views.campaign_details.fields.campaign_manager')
+        %td
+          %strong= model.campaign_manager
+      - if !@campaign.settings.exchange_url.nil? and !@campaign.settings.exchange_url.empty?
+        %tr
+          %td= t('views.campaign_details.fields.exchange_url')
+          %td= link_to t('views.campaign_details.actions.click_here'), @campaign.settings.exchange_url, target: '_blank'
+      - if @campaign.is_attached_io
+        %tr
+          %td= t('views.campaign_details.fields.signed_io')
+          %td= link_to 'Open', @campaign.signed_io.url, target: '_blank'

@@ -1,0 +1,68 @@
+table = {
+    title: [t('views.campaign_summaries.title', month: Time.now.strftime(Date::DATE_FORMATS[:month]))],
+    head: [
+        t('models.campaign_summary.fields.platform'),
+        t('models.campaign_summary.fields.campaign'),
+        t('models.campaign_summary.fields.imp'),
+        t('models.campaign_summary.fields.clicks'),
+        t('models.campaign_summary.fields.ecpm'),
+        t('models.campaign_summary.fields.ecpc'),
+        t('models.campaign_summary.fields.ctr'),
+        t('models.campaign_summary.fields.spend')
+    ],
+    data: {
+        model: @platform_monthly_report.data,
+        columns: {
+            platform: :bold,
+            campaign: nil,
+            views: :number,
+            clicks: :number,
+            ecpm: :money,
+            ecpc: :money,
+            ctr: :percent,
+            spend: :money
+        },
+        values: {
+            views: proc{|region, i, model| "=SUBTOTAL(9,#{region.x_by_column(:views)}#{region.y_body_by_index(i-model.data.length)}:#{region.x_by_column(:views)}#{region.y_body_by_index(i-1)})"},
+            clicks: proc{|region, i, model| "=SUBTOTAL(9,#{region.x_by_column(:clicks)}#{region.y_body_by_index(i-model.data.length)}:#{region.x_by_column(:clicks)}#{region.y_body_by_index(i-1)})"},
+            spend: proc{|region, i, model| "=SUBTOTAL(9,#{region.x_by_column(:spend)}#{region.y_body_by_index(i-model.data.length)}:#{region.x_by_column(:spend)}#{region.y_body_by_index(i-1)})"},
+            ctr: proc{|region, i|  "=#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}"},
+            ecpm: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}*1000"},
+            ecpc: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}"}
+        }
+    },
+    sub_rows: {
+        columns: {
+            platform: nil,
+            campaign: nil,
+            views: :number,
+            clicks: :number,
+            ecpm: :money,
+            ecpc: :money,
+            ctr: :percent,
+            spend: :money
+        },
+        values: {
+            ctr: proc{|region, i|  "=#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}"},
+            ecpm: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i)}*1000"},
+            ecpc: proc{|region, i|  "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i)}/#{region.x_by_column(:clicks)}#{region.y_body_by_index(i)}"}
+        },
+        position: :top
+    }
+}
+
+sheet_render.add_table table do |sheet, region, i|
+  total_row_data = [
+      t('models.campaign_summary.total'), nil,
+      "=SUBTOTAL(9,#{region.range_by_column(:views)})",
+      "=SUBTOTAL(9,#{region.range_by_column(:clicks)})",
+      "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i+1)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i+1)}*1000",
+      "=#{region.x_by_column(:spend)}#{region.y_body_by_index(i+1)}/#{region.x_by_column(:clicks)}#{region.y_body_by_index(i+1)}",
+      "=#{region.x_by_column(:clicks)}#{region.y_body_by_index(i+1)}/#{region.x_by_column(:views)}#{region.y_body_by_index(i+1)}",
+      "=SUBTOTAL(9,#{region.range_by_column(:spend)})"
+  ]
+
+  total_row_styles = [:head, :head, :head_number, :head_number, :head_money, :head_money, :head_percent, :head_money]
+
+  sheet_render.add_row(total_row_data, total_row_styles)
+end

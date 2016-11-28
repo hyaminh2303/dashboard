@@ -1,0 +1,109 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require bootstrap
+ *= require font-awesome
+ *= require ionicons
+ *= require 'admin-lte-yoose.css.scss'
+ *= require 'flat/_all'
+ *= #require datatables/dataTables.bootstrap
+ *= require select2
+ *= require select2-bootstrap
+ *= require dropzone
+ *= require bootstrap-datetimepicker
+ *= require leaflet
+ *= require bootstrap-datepicker
+ *= require datagrid
+ *= require dataTables/jquery.dataTables
+ *= require leaflet
+ *= require_self
+ *= require style
+ */
+
+.box .box-header {
+    border-bottom-width: 1px;
+}
+
+.box.box-solid .no-logo{
+    text-align: center;
+}
+
+.yoose-logo{
+    text-align: center;
+}
+
+.box.box-solid .box-header .box-title > a, .box.box-solid .box-header .box-tools > a {
+    color: #fff;
+}
+
+.box.box-info .row .btn-success{
+    margin-bottom: 10px
+}
+
+.box small{
+    color: gray;
+    display: inline-block;
+    font-size: 85%;
+}
+
+.box .live{
+    color: green;
+}
+
+.box .pending{
+    color: #f0ad4e;
+}
+
+.box .completed{
+    color: gray;
+}
+
+.label {
+    width: 15px;
+    height: 15px;
+}
+
+/* Fix Jquery datatable missing css for bootstrap datatable */
+div.dataTables_paginate {
+    float: right;
+    margin: 0;
+}
+
+div.dataTables_info {
+    padding-top: 8px;
+}
+
+div.dataTables_paginate ul.pagination {
+    margin: 2px 0;
+    white-space: nowrap;
+}
+
+.hidden_only{
+    display: none;
+}
+
+.sidebar {
+    margin-top: 10px;
+}
+
+.progressing{
+    background: transparent image_url('ajax-progressing.gif') 50% 50% no-repeat !important;
+}
+
+.bg-darkred{
+  background: #d32f2f;
+  color: white;
+}
+
+.bg-darkblue{
+  background: #607d8b;
+}

@@ -1,0 +1,21 @@
+- breadcrumb :category, @category
+- content_for :header do
+  = t('views.categories.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.categories.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_category_path(@category), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.category.fields.name')
+          %dd= @category.name
+          %dt= t('models.category.fields.category_code')
+          %dd= @category.category_code
+          %dt= t('models.category.fields.parent_id')
+          %dd= @category.parent_id
+      / /.box-body
+    / /.box

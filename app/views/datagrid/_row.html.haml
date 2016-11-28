@@ -1,0 +1,6 @@
+%tr{:class => options[:cycle] && cycle(*options[:cycle])}
+  - grid.html_columns(*options[:columns]).each do |column|
+    - custom_class = if column.options[:custom_class]
+      - column.options[:custom_class].call(asset)
+
+    %td{:class => "#{datagrid_column_classes(grid, column)} #{custom_class}"}= datagrid_format_value(grid, column, asset)

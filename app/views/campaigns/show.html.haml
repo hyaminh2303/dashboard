@@ -1,0 +1,29 @@
+- breadcrumb :campaign, @campaign
+- content_for :header do
+  = t('views.campaigns.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title= t('views.campaigns.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_campaign_path(@campaign), :class => 'btn btn-info btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.campaign.fields.name')
+          %dd= @campaign.name
+          %dt= t('models.campaign.fields.agency')
+          %dd= @campaign.agency.name
+          %dt= t('models.campaign.fields.active_at')
+          %dd= @campaign.active_at
+          %dt= t('models.campaign.fields.expire_at')
+          %dd= @campaign.expire_at
+          %dt= t('models.campaign.fields.target_click')
+          %dd= @campaign.target_click
+          %dt= t('models.campaign.fields.target_impression')
+          %dd= @campaign.target_impression
+          %dt= t('models.campaign.fields.revenue_type_name')
+          %dd= @campaign.campaign_type
+      / /.box-body
+    / /.box

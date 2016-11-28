@@ -1,0 +1,8 @@
+- unless error_messages.nil?
+  - if error_messages.any?
+    .alert.alert-danger.alert-dismissable
+      %i.fa.fa-ban
+      %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+      %ul
+        - error_messages.each do |msg|
+          %li= msg

@@ -1,0 +1,15 @@
+// Place all the styles related to the campaigns controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.has_location_breakdown .icheckbox_flat-red.checked.disabled{
+  background-position: -22px 0 !important;
+}
+
+.checkbox-group{
+  margin-bottom: 0px !important;
+}
+
+.high-light-date{
+  color: orangered;
+}

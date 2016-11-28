@@ -1,0 +1,6 @@
+- if defined? status
+  = status
+.pull-left
+  %div= link_to values.first, has_ads_group ? index_campaign_group_stats_path(campaign_id) : index_campaign_details_path(campaign_id)
+  - if values.second
+    %small{data: {toggle: 'tooltip', placement: 'right', :'original-title' => "#{title}"}}= values.last

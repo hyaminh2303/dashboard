@@ -1,0 +1,25 @@
+- breadcrumb :location_trackings_import
+- content_for :header do
+  = @campaign.name
+
+/ form start
+.row
+  .col.col-md-6
+    .box.box-info{ng: { controller: 'ImportController', init: 'init()'}}
+      = simple_form_for :location_trackings, url: import_campaign_location_trackings_path(date: date_to_iso_string(@date)), enctype: 'multipart/form-data' do |f|
+        .box-body.form-inputs
+
+          - unless @error_messages.nil?
+            - if @error_messages.any?
+              .alert.alert-danger.alert-dismissable
+                %i.fa.fa-ban
+                %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"} ×
+                %ul
+                  - @error_messages.each do |msg|
+                    %li= msg
+
+          .form-group
+            = f.label :file
+            = f.file_field :file
+          = f.button :submit, :value => t('views.form.import'), :class => 'btn btn-primary', 'ng-click' => 'onImportClick($event)'
+          = link_to t('views.form.cancel'), campaign_location_trackings_path(date: date_to_iso_string(@date)), class: 'btn btn-default'

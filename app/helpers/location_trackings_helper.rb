@@ -1,0 +1,3 @@
+module LocationTrackingsHelper
+
+end

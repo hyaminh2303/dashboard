@@ -1,0 +1,3 @@
+- paths = { :show_path => country_cost_path(model), :edit_path => edit_country_cost_path(model), delete_path: country_cost_path(model) }
+
+= render :partial => 'shared/actions', :locals => { :paths => paths }

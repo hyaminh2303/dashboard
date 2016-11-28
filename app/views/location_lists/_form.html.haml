@@ -1,0 +1,17 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@location_list) do |f|
+      = f.error_notification
+
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @location_list}
+        = f.input :name
+        = f.input :list_type, collection: %w(whitelist blacklist), input_html: {class: 'select2-static'}
+        = f.input :status do
+          = f.select :status, LocationList::STATUSES, {:selected => @location_list.status}, :class => 'form-control select2-static'
+
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to t('views.form.cancel'), location_lists_path, :class => 'btn btn-default'

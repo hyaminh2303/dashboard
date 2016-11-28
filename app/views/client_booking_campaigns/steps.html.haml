@@ -1,0 +1,27 @@
+.box.box-info.clearfix.steps-wrap
+  .col-md-12
+    %div
+      %ul.steps
+        - (1..3).each do |i|
+          %li{ng: { class: "activeStep(#{i})" }}
+            %span.step= i
+            %span.title
+              Step
+              = i
+      %hr
+      .step-content
+        .step-pane.active
+          %div{ui: {view: ''} }
+    %hr
+    .row
+      .col-sm-6.text-left
+        %button.btn.btn-primary{ng: { click: 'cancelCampaign()' }}
+          %i.ace-icon.fa.fa-times
+          Cancel
+      .col-sm-6.text-right
+        %button.btn.btn-primary.btn-prev{ng: { click: 'prev()', show: 'viewState.step != 1'} }
+          %i.ace-icon.fa.fa-arrow-left
+          Back
+        %button.btn.btn-primary.btn-next{ng: { click: 'next()', disabled: 'isSubmiting || !viewState.isValid()' } }
+          {{viewState.nextButtonText}}
+          %i.ace-icon.fa.fa-arrow-right.icon-on-right{ng: {show: 'viewState.nextButtonText != "Complete"'}}

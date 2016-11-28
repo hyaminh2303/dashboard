@@ -1,0 +1,56 @@
+%form.step1-form{name: 'step1-form'}
+  .row
+    .col-md-4.form-group
+      %label.control-label Banner Type
+      %select2.form-control{ng: {model: "client_booking_campaign.banner_type", required: 'true'}, "s2-options" => "banner_type.key as banner_type.label for banner_type in banner_types"}
+    .col-md-4.form-group
+      %label.control-label Banner Size
+      %select2.form-control.banner-size-select{ng: {model: "client_booking_campaign.banner_size", required: 'true', change: 'onBannerSizeChange()'}, "s2-options" => "banner_size.id as banner_size.name for banner_size in banner_sizes", multiple: true, options: { containerCssClass: '' }}
+    .col-md-4.form-group
+      %label.control-label Country
+      %select2.form-control{ng: {model: "client_booking_campaign.country_code", required: 'true', change: 'onCountryChange()'}, "s2-options" => "country.key as country.label for country in countries"}
+  .row
+    .col-md-12.form-group
+      %label
+        %input{:type => "checkbox", ng: { model: 'client_booking_campaign.no_specific_locations'}}
+        I haven't decided on any specific locations yet. Please advise
+  %div{ ng: { if: "!client_booking_campaign.no_specific_locations" } }
+    / %input{ type: 'file', 'ngf-select' => 'readCSV($files)'}
+    %table.table.table-bordered
+      %thead
+        %tr
+          %th{style: 'width: 25%'} City
+          %th{style: 'width: 17%'} Location
+          %th{style: 'width: 17%'} Impression Assessment
+          %th{style: 'width: 3%'}
+      %tbody
+        %tr{"ng-repeat" => "place in getPlaceItems() track by $index"}
+          %td
+            %select2.form-control{ng: {model: "place.city", required: 'true', change: 'onCityChange(place)'}, "s2-options" => "city.city_name as city.city_name for city in cities" }
+          %td
+            / .btn.btn-success Find location
+            %input{ type: 'file', 'ngf-select' => 'readCSV($files, place)'}
+            .text-success
+              {{getPlaceLocations(place).length || 0}}
+              locations has been selected.
+            %button.btn.btn-primary{ng: { click: 'openModal(place)' }} Add location
+          %td{class: 'text-align-right'}
+            {{place.impression_assessment | number:0}}
+          %td
+            %i.fa.fa-times{ng: { click:"removeRow(place)"}, style: 'cursor: pointer'}
+        %tr
+          %td{colspan: 2, class: 'text-bold text-align-right'}
+            Total
+          %td{class: 'text-align-right text-bold'}
+            {{viewState.totalImpressionAssessment | number:0 }}
+          %td
+    %div
+      %a{href: "#{root_url}/csv/location.csv"}
+        Download template file
+    .clearfix
+      %input.btn.btn-primary.btn-add-new-row.pull-right{name: "commit", type: "button", value: "New Item", ng: { click: 'addRow()' }}
+  %div{ ng: { if: "client_booking_campaign.no_specific_locations" } }
+    .row
+      .col-md-12.form-group
+        %label.control-label Description
+        %textarea.form-control{rows: 5, ng: {model: "client_booking_campaign.description", required: 'true'}}

@@ -1,0 +1,13 @@
+/ /.box-header
+/ form start
+.box.box-primary
+  .box-header
+    %h3.box-title
+    = simple_form_for(@category) do |f|
+      .box-body.form-inputs
+        = render :partial => '/shared/errors', locals: {model: @category}
+        = f.input :name
+        = f.input :category_code
+        = f.input :parent_id
+        = f.button :submit, :class => 'btn btn-primary'
+        = link_to 'Cancel', categories_path, :class => 'btn btn-default'

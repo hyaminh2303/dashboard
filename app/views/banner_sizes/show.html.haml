@@ -1,0 +1,17 @@
+- breadcrumb :banner_size, @banner_size
+- content_for :header do
+  = @title
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.banner_sizes.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_banner_size_path(@banner_size), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontalname
+        %dl
+          %dt= t('models.banner_sizes.fields.name')
+          %dd= @banner_size.name
+          %dt= t('models.banner_sizes.fields.size')
+          %dd= @banner_size.size

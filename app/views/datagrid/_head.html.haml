@@ -1,0 +1,10 @@
+- order = params[grid.param_name].nil? ? '' : params[grid.param_name][:order]
+- descending = params[grid.param_name].nil? ? 'false' : params[grid.param_name][:descending]
+%tr
+  - grid.html_columns(*options[:columns]).each do |column|
+    %th{:class => "#{datagrid_column_classes(grid, column)} #{(descending == 'false' ? 'sorting_asc' : 'sorting_desc') if column.order && options[:order] && order == column.name.to_s}"}
+      - if column.order && options[:order]
+        = link_to(column.header.html_safe,                                                                                                           |
+          url_for(grid.param_name => grid.as_query.merge(:order => column.name, :descending => descending == 'false' && order == column.name.to_s))) |
+      - else
+        = column.header

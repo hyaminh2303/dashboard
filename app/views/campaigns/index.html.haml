@@ -1,0 +1,8 @@
+- breadcrumb :campaigns
+- content_for :header do
+  = t('views.campaigns.index.table_header')
+
+
+= datagrid_form_for @grid, partials: 'campaigns/datagrid', :as => :campaigns_grid, :url => campaigns_path
+
+= datagrid_table @grid, :new_path => current_user.is_agency_or_client? ? nil : new_campaign_path, :html => {:class => 'table table-bordered table-hover table-campaigns'}

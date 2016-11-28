@@ -1,0 +1,30 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: t('views.campaign_summaries.summary')) do |sheet|
+
+  @sheet_render = Axlsx::WorksheetRender.new(sheet)
+
+  render partial: 'campaign_summaries/campaign_summary'
+
+  @region_country_and_platform = @sheet_render.add_region(20, [@platform_usage.size, @sales_by_country.size].max + 3)
+
+  render partial: 'campaign_summaries/sales_by_country'
+
+  render partial: 'campaign_summaries/platform_usage'
+
+  column_widths = { active_at: 7, expire_at: 7, country_code: 5, agency_name: 15, name: 30, campaign_type: 7,
+                    actual_budget: 15, target: 10, unit_price: 10, views: 10, clicks: 10,
+                    delivery_realized: 15, ctr: 10, spend: 10, spend_vs_budget: 15, ecpm: 10, ecpc: 10}
+
+  @sheet_render.column_widths(column_widths)
+end
+
+wb.add_worksheet(name: t('views.campaign_summaries.platform_breakdown')) do |sheet|
+  sheet_render = Axlsx::WorksheetRender.new(sheet)
+
+  render partial: 'campaign_summaries/platform_breakdown', locals: {sheet_render: sheet_render}
+
+  column_widths = { platform: 20, campaign: 30, views: 10, clicks: 10, ecpm: 10, ecpc: 10, ctr: 10, spend: 15}
+
+  sheet_render.column_widths(column_widths)
+end

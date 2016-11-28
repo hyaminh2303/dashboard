@@ -1,0 +1,1 @@
+json.array! @banner_sizes, :id, :name, :size

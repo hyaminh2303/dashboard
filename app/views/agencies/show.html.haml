@@ -1,0 +1,21 @@
+- breadcrumb :agency, @agency
+- content_for :header do
+  = t('views.agencies.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title= t('views.agencies.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_agency_path(@agency), :class => 'btn btn-info btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.agency.fields.name')
+          %dd= @agency.name
+        %dl
+          %dt= t('models.agency.fields.country_code')
+          %dd= @agency.country_display_name
+        %dl
+          %dt= t('models.agency.fields.email')
+          %dd= @agency.email

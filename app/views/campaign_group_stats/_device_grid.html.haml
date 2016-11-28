@@ -1,0 +1,31 @@
+%table.table.table-bordered{ id: 'campaign-device-table'}
+  %thead
+    %tr
+      %th= t('views.campaign_details.fields.number')
+      %th= t('views.campaign_details.fields.dates')
+      - if @device_report.ads_group_hidden == false
+        %th= t('views.campaign_details.fields.ad_group')
+      %th= t('views.campaign_details.fields.views')
+      %th= t('views.campaign_details.fields.clicks')
+      %th= t('views.campaign_details.fields.ctr')
+      %th= t('views.campaign_details.fields.number_of_device_ids')
+      %th= t('views.campaign_details.fields.device_ids_vs_views')
+      %th= t('views.campaign_details.fields.frequency_cap')
+
+      - if !(can? :manage, Campaign) && (agency_can_see_detail_campaign?(current_user))
+        %th= t('views.campaign_details.fields.spend')
+  %tfoot
+    %tr
+      - if @device_report.ads_group_hidden == false
+        %th{ colspan: '3'} Grand Total
+      - else
+        %th{ colspan: '2'} Grand Total
+      %th= number_with_delimiter(total.views)
+      %th= number_with_delimiter(total.clicks)
+      %th= total.ctr_formatted
+      %th= number_with_delimiter(total.number_of_device_ids)
+      %th= number_to_percentage(total.number_of_device_ids.to_f * 100 / total.views.to_f)
+      %th
+
+      - if !(can? :manage, Campaign) && (agency_can_see_detail_campaign?(current_user))
+        %th= total.spend_formatted

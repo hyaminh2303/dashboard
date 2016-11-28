@@ -1,0 +1,9 @@
+- breadcrumb :locations
+- content_for :header do
+  = t('views.locations.index.table_header')
+
+
+= datagrid_form_for @grid, partials: 'locations/datagrid', :as => :locations_grid, :url => locations_path
+
+/ # -# = datagrid_table @grid, :new_path => new_location_path, more_links: [link_to(icon_tag(:import) + content_tag(:span, 'Import').html_safe, import_locations_path, class: 'btn btn-success btn-sm text-white'), ], :html => {:class => 'table table-bordered table-hover'}
+= datagrid_table @grid, partials: 'locations/datagrid', :html => {:class => 'table table-bordered table-hover'}

@@ -1,0 +1,8 @@
+- breadcrumb :daily_est_imps
+- content_for :header do
+  = @title
+
+
+= datagrid_form_for @grid, :as => :daily_est_imps_grid, :url => daily_est_imps_path
+
+= datagrid_table @grid, :new_path => new_daily_est_imp_path, :html => {:class => 'table table-bordered table-hover'}

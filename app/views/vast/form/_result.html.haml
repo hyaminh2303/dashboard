@@ -1,0 +1,16 @@
+//Output
+.panel.box.box-solid.box-primary
+  .box-header
+    %h4.box-title
+      %a{href: '#vast-content', data: {toggle: 'collapse'}}
+        VAST content
+  #vast-content.panel-collapse.collapse.in
+    .box-body
+      - if @vast.url.present?
+        = f.input :url, label: 'URL'
+      = f.input :xml, label: 'VAST content', as: :text, input_html: {rows: 20}
+      - if @vast.url.blank?
+        = hidden_field_tag :commit_to_s3, 0
+        = button_tag 'Commit to S3', type: :button, :class => 'btn btn-primary', 'ng-click' => 'commitToS3()'
+      -else
+        = link_to t('views.form.verify'), 'http://demo.jwplayer.com/ad-tester', :class => 'btn btn-success', target: '_blank'

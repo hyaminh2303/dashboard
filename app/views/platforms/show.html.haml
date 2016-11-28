@@ -1,0 +1,17 @@
+- breadcrumb :platform, @platform
+- content_for :header do
+  = t('views.platforms.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-info
+      .box-header
+        %h3.box-title= t('views.platforms.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_platform_path(@platform), :class => 'btn btn-info btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.platform.fields.name')
+          %dd= @platform.name
+      / /.box-body
+    / /.box

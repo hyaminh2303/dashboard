@@ -1,0 +1,21 @@
+- breadcrumb :sub_total_setting, @sub_total_setting
+- content_for :header do
+  = t('views.sub_total_settings.show.title')
+.row
+  .col-md-6
+    .box.box-solid.box-primary
+      .box-header
+        %h3.box-title= t('views.sub_total_settings.show.info')
+        .box-tools.pull-right
+          = link_to content_tag(:span, '', :class => 'glyphicon glyphicon-pencil'), edit_sub_total_setting_path(@sub_total_setting), :class => 'btn btn-primary btn-xs'
+      / /.box-header
+      .box-body.dl-horizontal
+        %dl
+          %dt= t('models.sub_total_settings.fields.name')
+          %dd= @sub_total_setting.name
+          %dt= t('models.sub_total_settings.fields.sub_total_setting_type')
+          %dd.text-capitalize= @sub_total_setting.sub_total_setting_type
+          %dt= t('models.sub_total_settings.fields.budget_value')
+          %dd= @sub_total_setting.value
+      / /.box-body
+    / /.box

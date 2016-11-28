@@ -1,0 +1,21 @@
+title = t('models.sales_by_country.name')
+table = {
+    title: [title],
+    head: [t('models.sales_by_country.fields.country_code'), t('models.sales_by_country.fields.total_revenue')],
+    data: {
+        model: @sales_by_country,
+        columns: { country_code: nil, total_revenue_as_money: :money },
+    },
+    start_index: [@region_country_and_platform.y, 3],
+    border: true,
+}
+
+region = @sheet_render.add_table table, @region_country_and_platform
+
+graph = {
+    title: title,
+    start_at: [0, @region_country_and_platform.y_end + 1],
+    end_at: [5, @region_country_and_platform.y_end + 10],
+    region: region,
+}
+@sheet_render.add_pie_graph_from_region graph
